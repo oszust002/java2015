@@ -1,0 +1,15 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'application'
+
+
+mainClassName = "pl.edu.agh.kis.lab6.main.App"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+    compile group: 'com.google.guava', name: 'guava', version: '18.0'
+}
