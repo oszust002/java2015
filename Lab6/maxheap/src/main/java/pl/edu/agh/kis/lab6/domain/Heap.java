@@ -2,21 +2,41 @@ package pl.edu.agh.kis.lab6.domain;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class Heap<T extends Comparable<T>> {
-
+    private Comparator<T> comp;
     private int heapSize;
     private ArrayList<T> tab;
 
+    public Heap(Comparator<T> comp, ArrayList<T> list){
+        this.comp = comp;
+        tab = new ArrayList<T>(list);
+        heapSize = tab.size();
+        buildMaxHeap(tab);
+    }
+
     public Heap(){
+        this.comp = null;
+        tab = new ArrayList<T>();
+        heapSize = 0;
+    }
+
+    public Heap(Comparator<T> comp){
+        this.comp = comp;
         tab = new ArrayList<T>();
         heapSize = 0;
     }
 
     public Heap(ArrayList<T> list){
-        tab = new ArrayList<T>(list);
-        heapSize = tab.size();
-        buildMaxHeap(tab);
+        this(null, list);
+    }
+
+    private int comparision(T first, T second){
+        if(comp != null){
+            return comp.compare(first,second);
+        }
+        return first.compareTo(second);
     }
 
     public void insert(T value) {
@@ -32,7 +52,7 @@ public class Heap<T extends Comparable<T>> {
     }
 
     public int isChildGreaterThanParent(int currentIndex, int parentIndex) {
-        return tab.get(currentIndex).compareTo(tab.get(parentIndex));
+        return comparision(tab.get(currentIndex),tab.get(parentIndex));
     }
 
     public int parentIndex(int currentIndex) {
@@ -61,9 +81,9 @@ public class Heap<T extends Comparable<T>> {
         int largest = i;
         int left = leftChild(i);
         int right = rightChild(i);
-        if((left <= list.size() - 1) && (list.get(i).compareTo(list.get(left)) < 0))
+        if((left <= list.size() - 1) && (comparision(list.get(i),list.get(left)) < 0))
             largest = left;
-        if((right <= list.size() - 1) && (list.get(largest).compareTo(list.get(right)) < 0))
+        if((right <= list.size() - 1) && (comparision(list.get(largest), list.get(right)) < 0))
             largest = right;
         if(largest != i){
             Collections.swap(list,largest,i);

@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class HeapTest {
 
@@ -141,5 +142,29 @@ public class HeapTest {
 
         assertEquals("Top should be tata","tata",heap.top());
 
+    }
+
+    @Test
+    public void createDoubleHeapWithReversedComparator_topIs0(){
+        Comparator<Double> comp = new Comparator<Double>() {
+            @Override
+            public int compare(Double o1, Double o2) {
+                if(o1.compareTo(o2) > 0)
+                    return -1;
+                else if (o1.compareTo(o2) < 0)
+                    return 1;
+                else 
+                    return 0;
+            }
+        };
+
+        Heap<Double> heap = new Heap<Double>(comp);
+        heap.insert(5.0);
+        heap.insert(2.0);
+        heap.insert(1.0);
+        heap.insert(0.0);
+        heap.insert(6.0);
+
+        assertEquals("Top should be 0", 0, heap.top(), 0.01);
     }
 }
