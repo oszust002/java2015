@@ -12,7 +12,7 @@ public class HeapTest {
     @Test
     public void insert0intoNewHeap_topIs0() {
 
-        Heap heap = new Heap();
+        Heap<Double> heap = new Heap<Double>();
         heap.insert(0.0);
 
         assertEquals("size should be 1",1,heap.size());
@@ -23,7 +23,7 @@ public class HeapTest {
     @Test
     public void insert0AndThen2intoNewHeap_topIs2() {
 
-        Heap heap = new Heap();
+        Heap<Double> heap = new Heap<Double>();
         heap.insert(0.0);
         heap.insert(2.0);
 
@@ -34,7 +34,7 @@ public class HeapTest {
     @Test
     public void insert0And2And3And5And6intoNewHeap_topIs6() {
 
-        Heap heap = new Heap();
+        Heap<Double> heap = new Heap<Double>();
         heap.insert(0.0);
         heap.insert(2.0);
         heap.insert(3.0);
@@ -46,7 +46,7 @@ public class HeapTest {
 
     @Test
     public void insert0And3And2And5And6_childrenIndexOf0Are1And2(){
-        Heap heap = new Heap();
+        Heap<Double> heap = new Heap<Double>();
         heap.insert(0.0);
         heap.insert(3.0);
         heap.insert(2.0);
@@ -59,7 +59,7 @@ public class HeapTest {
 
     @Test
     public void insert0And3And2And5And6_extractIs6_newTopIs5_sizeIs4(){
-        Heap heap = new Heap();
+        Heap<Double> heap = new Heap<Double>();
         heap.insert(0.0);
         heap.insert(3.0);
         heap.insert(2.0);
@@ -73,7 +73,7 @@ public class HeapTest {
 
     @Test
     public void createArrayListAndBuildMaxHeap_topIs6(){
-        Heap heap = new Heap();
+        Heap<Double> heap = new Heap<Double>();
         ArrayList<Double> list = new ArrayList<Double>();
         list.add(0.0);
         list.add(2.0);
@@ -87,8 +87,8 @@ public class HeapTest {
 
     @Test
     public void createTwoHeapsAndMergeIntoNewHeap(){
-        Heap first = new Heap();
-        Heap second = new Heap();
+        Heap<Double> first = new Heap<Double>();
+        Heap<Double> second = new Heap<Double>();
         first.insert(0.0);
         first.insert(2.0);
         first.insert(3.0);
@@ -96,15 +96,15 @@ public class HeapTest {
         second.insert(6.0);
         second.insert(4.0);
         second.insert(7.0);
-        Heap merged = Heap.merge(first, second);
+        Heap<Double> merged = Heap.merge(first, second);
         assertEquals("Size should be 7", 7, merged.size());
         assertEquals("Top is 7", 7, merged.top(), 0.01);
     }
 
     @Test
     public void createTwoHeapsAndMeldSecondToFirst(){
-        Heap first = new Heap();
-        Heap second = new Heap();
+        Heap<Double> first = new Heap<Double>();
+        Heap<Double> second = new Heap<Double>();
         first.insert(0.0);
         first.insert(2.0);
         first.insert(3.0);
@@ -119,7 +119,7 @@ public class HeapTest {
 
     @Test
     public void createHeapCheckTop_replaceTopWith1_checkTopAgain(){
-        Heap heap = new Heap();
+        Heap<Double> heap = new Heap<Double>();
         heap.insert(0.0);
         heap.insert(3.0);
         heap.insert(2.0);
@@ -130,6 +130,16 @@ public class HeapTest {
         heap.replace(1.0);
         assertEquals("Top should be 5", 5, heap.top(),0.01);
 
+    }
+
+    @Test
+    public void checkGenericHeapForStrings_TopIsAmen(){
+        Heap<String> heap = new Heap<String>();
+        heap.insert("mama");
+        heap.insert("tata");
+        heap.insert("amen");
+
+        assertEquals("Top should be tata","tata",heap.top());
 
     }
 }

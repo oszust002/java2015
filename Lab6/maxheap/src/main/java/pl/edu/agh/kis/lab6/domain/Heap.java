@@ -3,27 +3,27 @@ package pl.edu.agh.kis.lab6.domain;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Heap {
+public class Heap<T extends Comparable<T>> {
 
     private int heapSize;
-    private ArrayList<Double> tab;
+    private ArrayList<T> tab;
 
     public Heap(){
-        tab = new ArrayList<Double>();
+        tab = new ArrayList<T>();
         heapSize = 0;
     }
 
-    public Heap(ArrayList<Double> list){
-        tab = new ArrayList<Double>(list);
+    public Heap(ArrayList<T> list){
+        tab = new ArrayList<T>(list);
         heapSize = tab.size();
         buildMaxHeap(tab);
     }
 
-    public void insert(Double value) {
+    public void insert(T value) {
         int currentIndex = heapSize;
         int parentIndex = parentIndex(currentIndex);
         tab.add(value);
-        while( isChildGreaterThanParent(currentIndex, parentIndex) ) {
+        while( isChildGreaterThanParent(currentIndex, parentIndex) >0) {
             Collections.swap(tab,currentIndex, parentIndex);
             currentIndex = parentIndex;
             parentIndex = parentIndex(currentIndex);
@@ -31,8 +31,8 @@ public class Heap {
         heapSize++;
     }
 
-    public boolean isChildGreaterThanParent(int currentIndex, int parentIndex) {
-        return tab.get(currentIndex) > tab.get(parentIndex);
+    public int isChildGreaterThanParent(int currentIndex, int parentIndex) {
+        return tab.get(currentIndex).compareTo(tab.get(parentIndex));
     }
 
     public int parentIndex(int currentIndex) {
@@ -48,22 +48,22 @@ public class Heap {
         return 2*parentIndex+2;
     }
 
-    public Double extractMax(){
+    public T extractMax(){
         if (size() == 0) {
             throw new IllegalStateException("The heap is empty");
         }
-        Double ret = tab.get(0);
+        T ret = tab.get(0);
         deleteMax();
         return ret;
     }
 
-    private void heapify(ArrayList<Double> list, int i) {
+    private void heapify(ArrayList<T> list, int i) {
         int largest = i;
         int left = leftChild(i);
         int right = rightChild(i);
-        if((left <= list.size() - 1) && (list.get(i) < list.get(left)))
+        if((left <= list.size() - 1) && (list.get(i).compareTo(list.get(left)) < 0))
             largest = left;
-        if((right <= list.size() - 1) && (list.get(largest) < list.get(right)))
+        if((right <= list.size() - 1) && (list.get(largest).compareTo(list.get(right)) < 0))
             largest = right;
         if(largest != i){
             Collections.swap(list,largest,i);
@@ -80,16 +80,16 @@ public class Heap {
         heapify(tab,0);
     }
 
-    public void buildMaxHeap(ArrayList<Double> list){
+    public void buildMaxHeap(ArrayList<T> list){
         for(int i=(list.size()-1)/2;i>=0;i--) {
             heapify(list, i);
         }
     }
 
-    public static Heap merge(Heap first, Heap second){
-        ArrayList<Double> mergedTab = new ArrayList<Double>(first.tab);
+    public static<T extends Comparable<T>> Heap<T> merge(Heap<T> first, Heap<T> second){
+        ArrayList<T> mergedTab = new ArrayList<T>(first.tab);
         mergedTab.addAll(second.tab);
-        Heap newHeap = new Heap(mergedTab);
+        Heap<T> newHeap = new Heap<T>(mergedTab);
         return newHeap;
     }
 
@@ -99,7 +99,7 @@ public class Heap {
         buildMaxHeap(tab);
     }
 
-    public void replace(Double replacing){
+    public void replace(T replacing){
         tab.set(0,replacing);
         heapify(tab, 0);
     }
@@ -108,7 +108,7 @@ public class Heap {
         return heapSize ;
     }
 
-    public double top() {
+    public T top() {
         return tab.get(0);
     }
 
