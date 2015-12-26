@@ -52,4 +52,12 @@ public class VonNeumanNeighborhood implements CellNeighborhood {
     public boolean isOutOfGrid(int x, int y){
         return (x > width || y > height) || (x < 0 || y < 0);
     }
+
+    @Override
+    public boolean equals(Object obj){
+        if(!(obj instanceof VonNeumanNeighborhood))
+            return false;
+        VonNeumanNeighborhood second = (VonNeumanNeighborhood) obj;
+        return r == second.r && wrap == second.wrap && width == second.width && height == second.height;
+    }
 }

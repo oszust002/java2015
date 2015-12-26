@@ -38,7 +38,7 @@ public abstract class Automaton2Dim extends Automaton{
         else if (coords2D.x == width - 1)
             return (coords2D.y - (height - 1)) < 0;
         else
-            return coords2D.y == height - 1 && (coords2D.x - (height - 1)) < 0;
+            return coords2D.y == height - 1 && (coords2D.x - (width - 1)) < 0;
     }
 
     @Override
@@ -67,5 +67,18 @@ public abstract class Automaton2Dim extends Automaton{
 
     public int getHeight() {
         return height;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder stringBuilder = new StringBuilder();
+        for(Cell c: this){
+            Coords2D coords2D = (Coords2D) c.coords;
+            if(coords2D.x == width-1 && coords2D.y != height-1)
+                stringBuilder.append(c.state.toString()+"\n");
+            else
+                stringBuilder.append(c.state.toString());
+        }
+        return stringBuilder.toString();
     }
 }

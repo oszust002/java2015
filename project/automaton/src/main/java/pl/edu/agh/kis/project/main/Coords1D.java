@@ -15,4 +15,12 @@ public class Coords1D implements CellCoordinates{
         Coords2D second = (Coords2D) o;
         return x-second.x;
     }
+
+    @Override
+    public boolean equals(Object obj){
+        if(!(obj instanceof Coords1D))
+            return false;
+        Coords1D second = (Coords1D) obj;
+        return compareTo(second) == 0;
+    }
 }

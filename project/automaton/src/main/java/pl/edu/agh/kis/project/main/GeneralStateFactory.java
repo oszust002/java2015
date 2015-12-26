@@ -16,10 +16,25 @@ public class GeneralStateFactory implements CellStateFactory{
         states = new TreeMap<CellCoordinates,CellState>(map);
     }
 
+    public GeneralStateFactory(CellState[][] initialStates){
+        states = new TreeMap<CellCoordinates, CellState>();
+        for(int i=0;i<initialStates.length;i++)
+            for(int j=0;j<initialStates[0].length;j++)
+                states.put(new Coords2D(j,i),initialStates[i][j]);
+    }
+
     public CellState initialState(CellCoordinates coords){
         if(!(states.containsKey(coords)))
             throw new NoSuchElementException();
         return states.get(coords);
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(!(obj instanceof GeneralStateFactory))
+            return false;
+        GeneralStateFactory second = (GeneralStateFactory) obj;
+        return states.equals(second.states);
     }
 
 }

@@ -18,4 +18,12 @@ public class Cell implements Comparable<Cell>{
     public int compareTo(Cell second) {
         return coords.compareTo(second.coords);
     }
+
+    @Override
+    public boolean equals(Object obj){
+        if(!(obj instanceof Cell))
+            return false;
+        Cell casted = (Cell) obj;
+        return casted.coords.equals(coords) && casted.state.equals(state);
+    }
 }

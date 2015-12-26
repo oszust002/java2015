@@ -46,6 +46,13 @@ public class MoorNeighbourhood implements CellNeighborhood{
     }
 
     public boolean isOutOfGrid(int x, int y){
-        return (x > width || y > height) || (x < 0 || y < 0);
+        return (x > width-1 || y > height-1) || (x < 0 || y < 0);
+    }
+
+    public boolean equals(Object obj){
+        if(!(obj instanceof MoorNeighbourhood))
+            return false;
+        MoorNeighbourhood second = (MoorNeighbourhood) obj;
+        return r == second.r && wrap == second.wrap && width == second.width && height == second.height;
     }
 }

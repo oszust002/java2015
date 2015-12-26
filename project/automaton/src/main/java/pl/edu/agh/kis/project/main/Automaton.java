@@ -19,15 +19,16 @@ public abstract class Automaton implements Iterable<Cell>{
         this.stateFactory = stateFactory;
         cells = new TreeMap<CellCoordinates, CellState>();
     }
-    //TODO double iterator(foreach for old automaton, normal iterator for newCellAutomaton
+
     public Automaton nextState(){
         Automaton newCellAutomaton = newInstance(stateFactory,neighborsStrategy);
-        for (CellIterator it=new CellIterator();it.hasNext();) {
-            Cell c = it.next();
+        CellIterator newAutomatonIterator = newCellAutomaton.iterator();
+        for (Cell c: this) {
+            newAutomatonIterator.next();
             Set<CellCoordinates> neighbours = neighborsStrategy.cellNeighbors(c.coords);
             Set<Cell> mappedNeighbours = mapCoordinates(neighbours);
             CellState newState = nextCellState(c.state, mappedNeighbours);
-            it.setState(newState);
+            newAutomatonIterator.setState(newState);
         }
         return newCellAutomaton;
     }
@@ -78,5 +79,22 @@ public abstract class Automaton implements Iterable<Cell>{
             currentState=nextCoordinates(currentState);
             return new Cell(cells.get(currentState),currentState);
         }
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(!(obj instanceof Automaton))
+            return false;
+        Automaton second = (Automaton)obj;
+        if(!(neighborsStrategy.equals(second.neighborsStrategy)))
+            return false;
+        //todo: add state factory equality(problem: comparing automatons in tests)
+        CellIterator objIterator = second.iterator();
+        for(Cell c: this){
+            Cell objCell = objIterator.next();
+            if(!c.equals(objCell))
+                return false;
+        }
+        return !objIterator.hasNext();
     }
 }

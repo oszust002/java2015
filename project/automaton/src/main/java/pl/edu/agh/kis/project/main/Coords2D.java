@@ -17,17 +17,24 @@ public class Coords2D implements CellCoordinates{
     @Override
     public int compareTo(CellCoordinates o) {
         Coords2D second = (Coords2D) o;
-        if(second.x==x && second.y==y)
-            return 0;
-        if(second.y<y)
+        if(y>second.y)
             return 1;
-        if(second.y == y && second.x<x)
-            return 1;
-        return -1;
+        else if(y < second.y)
+            return -1;
+        else
+            return x-second.x;
     }
 
     @Override
     public String toString() {
         return "["+x+", " + y +"]";
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if (!(obj instanceof Coords2D))
+            return false;
+        Coords2D second = (Coords2D) obj;
+        return compareTo(second) == 0;
     }
 }

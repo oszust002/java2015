@@ -22,22 +22,26 @@ public class WireWorld extends Automaton2Dim {
 
     @Override
     protected CellState nextCellState(CellState currentState, Set<Cell> neighborsStates) {
-        if(currentState == WireElectronState.ELECTRON_HEAD)
-            return WireElectronState.ELECTRON_TAIL;
-        else if(currentState == WireElectronState.ELECTRON_TAIL)
-            return WireElectronState.WIRE;
-        else if(currentState == WireElectronState.WIRE){
-            int occurences = 0;
-            for(Cell c: neighborsStates){
-                if(c.state == WireElectronState.ELECTRON_HEAD)
-                    occurences++;
+        WireElectronState state = (WireElectronState) currentState;
+        switch (state){
+            case VOID:
+                return state;
+            case ELECTRON_HEAD:
+                return WireElectronState.ELECTRON_TAIL;
+            case ELECTRON_TAIL:
+                return WireElectronState.WIRE;
+            case WIRE:{
+                int occurences = 0;
+                for(Cell cell: neighborsStates)
+                    if(cell.state == WireElectronState.ELECTRON_HEAD)
+                        occurences++;
+                    if(occurences==1 || occurences==2)
+                        return WireElectronState.ELECTRON_HEAD;
+                    else
+                        return state;
             }
-            if(occurences==1 || occurences==2)
-                return WireElectronState.ELECTRON_HEAD;
-            else
-                return currentState;
+            default:
+                return null;
         }
-        else
-            return currentState;
     }
 }
