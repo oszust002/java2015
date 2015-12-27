@@ -1,6 +1,6 @@
 package pl.edu.agh.kis.project.main.neighbourhood;
 
-import pl.edu.agh.kis.project.main.CellCoordinates;
+import pl.edu.agh.kis.project.main.coords.CellCoordinates;
 
 import java.util.Set;
 

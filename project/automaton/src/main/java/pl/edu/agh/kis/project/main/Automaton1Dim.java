@@ -1,5 +1,7 @@
 package pl.edu.agh.kis.project.main;
 
+import pl.edu.agh.kis.project.main.coords.CellCoordinates;
+import pl.edu.agh.kis.project.main.coords.Coords1D;
 import pl.edu.agh.kis.project.main.neighbourhood.CellNeighborhood;
 
 import java.util.NoSuchElementException;
@@ -19,7 +21,7 @@ public abstract class Automaton1Dim extends Automaton{
     @Override
     protected boolean hasNextCoordinates(CellCoordinates coords) {
         if (!(coords instanceof Coords1D))
-            return false; //TODO Exception for wrong dimension;
+            throw new IllegalArgumentException("Automaton1Dim supports only Coords1D");
         Coords1D coords1D = (Coords1D) coords;
         return coords1D.x < 0 || coords1D.x < size - 1;
     }

@@ -41,7 +41,7 @@ public class WireWorld extends Automaton2Dim {
                         return state;
             }
             default:
-                return null;
+                throw new IllegalArgumentException();
         }
     }
 }

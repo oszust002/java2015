@@ -1,5 +1,7 @@
 package pl.edu.agh.kis.project.main;
 
+import pl.edu.agh.kis.project.main.coords.CellCoordinates;
+import pl.edu.agh.kis.project.main.coords.Coords2D;
 import pl.edu.agh.kis.project.main.states.CellState;
 
 import java.util.Map;

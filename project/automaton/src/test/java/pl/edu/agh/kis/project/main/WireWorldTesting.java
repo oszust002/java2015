@@ -4,10 +4,13 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import pl.edu.agh.kis.project.main.neighbourhood.MoorNeighbourhood;
+import pl.edu.agh.kis.project.main.states.BinaryState;
 import pl.edu.agh.kis.project.main.states.CellState;
 import pl.edu.agh.kis.project.main.states.WireElectronState;
 
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * Created by Kamil on 09.12.2015.

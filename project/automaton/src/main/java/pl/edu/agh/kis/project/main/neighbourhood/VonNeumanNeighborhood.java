@@ -1,7 +1,7 @@
 package pl.edu.agh.kis.project.main.neighbourhood;
 
-import pl.edu.agh.kis.project.main.CellCoordinates;
-import pl.edu.agh.kis.project.main.Coords2D;
+import pl.edu.agh.kis.project.main.coords.CellCoordinates;
+import pl.edu.agh.kis.project.main.coords.Coords2D;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -26,10 +26,10 @@ public class VonNeumanNeighborhood implements CellNeighborhood {
     }
 
     @Override
-    public Set<CellCoordinates> cellNeighbors(CellCoordinates cell) {
+    public Set<CellCoordinates> cellNeighbors(CellCoordinates cell){
         int r_x;
         if(!(cell instanceof Coords2D))
-            return null; //TODO
+            throw new IllegalArgumentException("VonNeumannNeighbourhood supports only Coords2D");
         Coords2D cell2D = (Coords2D) cell;
         Set<CellCoordinates> neighbours = new TreeSet<CellCoordinates>();
         for(int x=cell2D.x-r;x<=cell2D.x+r;x++) {
@@ -50,7 +50,7 @@ public class VonNeumanNeighborhood implements CellNeighborhood {
     }
 
     public boolean isOutOfGrid(int x, int y){
-        return (x > width || y > height) || (x < 0 || y < 0);
+        return (x > width-1 || y > height-1) || (x < 0 || y < 0);
     }
 
     @Override

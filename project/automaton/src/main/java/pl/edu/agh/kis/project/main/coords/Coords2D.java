@@ -1,9 +1,9 @@
-package pl.edu.agh.kis.project.main;
+package pl.edu.agh.kis.project.main.coords;
 
 /**
  * Created by Kamil on 23.11.2015.
  */
-public class Coords2D implements CellCoordinates{
+public class Coords2D implements CellCoordinates {
     public final int x;
     public final int y;
 

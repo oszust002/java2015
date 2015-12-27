@@ -1,5 +1,7 @@
 package pl.edu.agh.kis.project.main;
 
+import pl.edu.agh.kis.project.main.coords.CellCoordinates;
+import pl.edu.agh.kis.project.main.coords.Coords2D;
 import pl.edu.agh.kis.project.main.neighbourhood.CellNeighborhood;
 import pl.edu.agh.kis.project.main.states.CellState;
 
@@ -29,7 +31,7 @@ public abstract class Automaton2Dim extends Automaton{
     @Override
     protected boolean hasNextCoordinates(CellCoordinates coords) {
         if(!(coords instanceof Coords2D))
-            return false; //TODO Exception for wrong dimensions;
+            throw new IllegalArgumentException("Automaton2Dim supports only Coords2D");
         Coords2D coords2D = (Coords2D) coords;
         if(coords2D.x <0 || coords2D.y <0)
             return true;

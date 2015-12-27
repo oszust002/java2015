@@ -1,5 +1,6 @@
 package pl.edu.agh.kis.project.main;
 
+import pl.edu.agh.kis.project.main.coords.CellCoordinates;
 import pl.edu.agh.kis.project.main.states.CellState;
 
 /**
