@@ -22,16 +22,16 @@ public abstract class Automaton implements Iterable<Cell>{
     }
 
     public Automaton nextState(){
-            Automaton newCellAutomaton = newInstance(stateFactory,neighborsStrategy);
-            CellIterator newAutomatonIterator = newCellAutomaton.iterator();
-            for (Cell c: this) {
-                newAutomatonIterator.next();
-                Set<CellCoordinates> neighbours = neighborsStrategy.cellNeighbors(c.coords);
-                Set<Cell> mappedNeighbours = mapCoordinates(neighbours);
-                CellState newState = nextCellState(c.state, mappedNeighbours);
-                newAutomatonIterator.setState(newState);
-            }
-            return newCellAutomaton;
+        Automaton newCellAutomaton = newInstance(stateFactory,neighborsStrategy);
+        CellIterator newAutomatonIterator = newCellAutomaton.iterator();
+        for (Cell c: this) {
+            newAutomatonIterator.next();
+            Set<CellCoordinates> neighbours = neighborsStrategy.cellNeighbors(c.coords);
+            Set<Cell> mappedNeighbours = mapCoordinates(neighbours);
+            CellState newState = nextCellState(c.state, mappedNeighbours);
+            newAutomatonIterator.setState(newState);
+        }
+        return newCellAutomaton;
     }
 
     public void insertStructure(TreeMap<? extends CellCoordinates, ? extends CellState> structure){
