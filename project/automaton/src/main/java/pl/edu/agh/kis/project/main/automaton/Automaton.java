@@ -1,5 +1,7 @@
-package pl.edu.agh.kis.project.main;
+package pl.edu.agh.kis.project.main.automaton;
 
+import pl.edu.agh.kis.project.main.Cell;
+import pl.edu.agh.kis.project.main.CellStateFactory;
 import pl.edu.agh.kis.project.main.coords.CellCoordinates;
 import pl.edu.agh.kis.project.main.neighbourhood.CellNeighborhood;
 import pl.edu.agh.kis.project.main.states.CellState;
@@ -80,6 +82,10 @@ public abstract class Automaton implements Iterable<Cell>{
             currentState=nextCoordinates(currentState);
             return new Cell(cells.get(currentState),currentState);
         }
+    }
+
+    public boolean getWrap(){
+        return neighborsStrategy.getWrap();
     }
 
     @Override

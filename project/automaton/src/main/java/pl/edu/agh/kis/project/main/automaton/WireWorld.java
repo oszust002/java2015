@@ -1,7 +1,10 @@
-package pl.edu.agh.kis.project.main;
+package pl.edu.agh.kis.project.main.automaton;
 
 
+import pl.edu.agh.kis.project.main.Cell;
+import pl.edu.agh.kis.project.main.CellStateFactory;
 import pl.edu.agh.kis.project.main.neighbourhood.CellNeighborhood;
+import pl.edu.agh.kis.project.main.neighbourhood.MoorNeighbourhood;
 import pl.edu.agh.kis.project.main.states.CellState;
 import pl.edu.agh.kis.project.main.states.WireElectronState;
 
@@ -11,13 +14,13 @@ import java.util.Set;
  * Created by Kamil on 07.12.2015.
  */
 public class WireWorld extends Automaton2Dim {
-    public WireWorld(CellNeighborhood neighboursStrategy, CellStateFactory stateFactory, int width, int height) {
-        super(neighboursStrategy, stateFactory, width, height);
+    public WireWorld(CellStateFactory stateFactory, int width, int height,boolean wrap) {
+        super(new MoorNeighbourhood(1,width,height,wrap), stateFactory, width, height);
     }
 
     @Override
     protected Automaton newInstance(CellStateFactory factory, CellNeighborhood neighbourhood) {
-        return new WireWorld(neighbourhood,factory,getWidth(),getHeight());
+        return new WireWorld(factory,getWidth(),getHeight(),getWrap());
     }
 
     @Override

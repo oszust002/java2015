@@ -45,6 +45,11 @@ public class MoorNeighbourhood implements CellNeighborhood{
         return neighbours;
     }
 
+    @Override
+    public boolean getWrap() {
+        return wrap;
+    }
+
     public boolean isOutOfGrid(int x, int y){
         return (x > width-1 || y > height-1) || (x < 0 || y < 0);
     }

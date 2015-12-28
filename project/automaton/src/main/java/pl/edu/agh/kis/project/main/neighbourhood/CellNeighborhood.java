@@ -9,4 +9,5 @@ import java.util.Set;
  */
 public interface CellNeighborhood {
     Set<CellCoordinates> cellNeighbors(CellCoordinates cell);
+    boolean getWrap();
 }

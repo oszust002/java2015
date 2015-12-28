@@ -5,4 +5,16 @@ package pl.edu.agh.kis.project.main.states;
  */
 public enum BinaryState implements CellState{
     DEAD, ALIVE;
+
+    @Override
+    public String toString(){
+        switch(this){
+            case DEAD:
+                return " ";
+            case ALIVE:
+                return "X";
+            default:
+                return null;
+        }
+    }
 }

@@ -1,5 +1,7 @@
-package pl.edu.agh.kis.project.main;
+package pl.edu.agh.kis.project.main.automaton;
 
+import pl.edu.agh.kis.project.main.Cell;
+import pl.edu.agh.kis.project.main.CellStateFactory;
 import pl.edu.agh.kis.project.main.coords.CellCoordinates;
 import pl.edu.agh.kis.project.main.coords.Coords2D;
 import pl.edu.agh.kis.project.main.neighbourhood.CellNeighborhood;
@@ -11,7 +13,7 @@ import java.util.TreeMap;
 /**
  * Created by Kamil on 24.11.2015.
  */
-public abstract class Automaton2Dim extends Automaton{
+public abstract class Automaton2Dim extends Automaton {
     private int width;
     private int height;
 

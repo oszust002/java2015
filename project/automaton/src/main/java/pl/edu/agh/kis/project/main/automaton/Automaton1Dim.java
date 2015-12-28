@@ -1,5 +1,6 @@
-package pl.edu.agh.kis.project.main;
+package pl.edu.agh.kis.project.main.automaton;
 
+import pl.edu.agh.kis.project.main.CellStateFactory;
 import pl.edu.agh.kis.project.main.coords.CellCoordinates;
 import pl.edu.agh.kis.project.main.coords.Coords1D;
 import pl.edu.agh.kis.project.main.neighbourhood.CellNeighborhood;
@@ -9,7 +10,7 @@ import java.util.NoSuchElementException;
 /**
  * Created by Kamil on 24.11.2015.
  */
-public abstract class Automaton1Dim extends Automaton{
+public abstract class Automaton1Dim extends Automaton {
     private int size;
 
     public Automaton1Dim(CellNeighborhood neighboursStrategy, CellStateFactory stateFactory, int size) {

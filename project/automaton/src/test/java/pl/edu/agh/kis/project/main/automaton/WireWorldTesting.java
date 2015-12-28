@@ -1,7 +1,7 @@
-package pl.edu.agh.kis.project.main;
+package pl.edu.agh.kis.project.main.automaton;
 
 import org.junit.Test;
-import pl.edu.agh.kis.project.main.neighbourhood.MoorNeighbourhood;
+import pl.edu.agh.kis.project.main.GeneralStateFactory;
 import pl.edu.agh.kis.project.main.states.CellState;
 import pl.edu.agh.kis.project.main.states.WireElectronState;
 
@@ -28,11 +28,11 @@ public class WireWorldTesting {
 
     @Test
     public void WireWorld_CreateWithInitialState_Do3Steps_CheckWithExpected(){
-        Automaton wireWorldStart = new WireWorld(new MoorNeighbourhood(wireWorld[0].length,wireWorld.length,false),
-                new GeneralStateFactory(wireWorld),wireWorld[0].length,wireWorld.length);
+        Automaton wireWorldStart = new WireWorld(new GeneralStateFactory(wireWorld),wireWorld[0].length,
+                wireWorld.length,false);
 
-        Automaton wireWorldExpected = new WireWorld(new MoorNeighbourhood(expected[0].length,expected.length,false),
-                new GeneralStateFactory(expected),expected[0].length,expected.length);
+        Automaton wireWorldExpected = new WireWorld(new GeneralStateFactory(expected),expected[0].length,
+                expected.length,false);
         for (int i=0;i<3;i++) {
             wireWorldStart = wireWorldStart.nextState();
         }
