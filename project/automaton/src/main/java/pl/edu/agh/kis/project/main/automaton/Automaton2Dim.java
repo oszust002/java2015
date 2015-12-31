@@ -52,9 +52,6 @@ public abstract class Automaton2Dim extends Automaton {
 
     @Override
     protected CellCoordinates nextCoordinates(CellCoordinates coords) {
-        if(!hasNextCoordinates(coords))
-            throw new NoSuchElementException();
-        else{
             Coords2D coords2D = (Coords2D) coords;
             if(coords2D.x<0 && coords2D.y<0)
                 return new Coords2D(0,0);
@@ -62,7 +59,6 @@ public abstract class Automaton2Dim extends Automaton {
                 return new Coords2D(0,coords2D.y+1);
             else
                 return new Coords2D(coords2D.x+1, coords2D.y);
-        }
     }
 
     public int getWidth() {

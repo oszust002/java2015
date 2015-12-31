@@ -66,7 +66,7 @@ public class MooreNeighbourhoodTest {
     }
 
     @Test
-    public void cellNeighboursThrowsIllegalArgumentException(){
+    public void cellNeighboursThrowsIllegalArgumentException_MessageEqualToExpected(){
         try {
             MoorNeighbourhood neighborhood = new MoorNeighbourhood(6,6,false);
             neighborhood.cellNeighbors(new Coords1D(1));

@@ -24,8 +24,8 @@ public class WireWorld extends Automaton2Dim {
     }
 
     @Override
-    protected CellState nextCellState(CellState currentState, Set<Cell> neighborsStates) {
-        WireElectronState state = (WireElectronState) currentState;
+    protected CellState nextCellState(Cell current, Set<Cell> neighborsStates) {
+        WireElectronState state = (WireElectronState) current.state;
         switch (state){
             case VOID:
                 return state;

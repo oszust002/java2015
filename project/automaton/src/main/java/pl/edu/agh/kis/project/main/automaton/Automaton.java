@@ -30,7 +30,7 @@ public abstract class Automaton implements Iterable<Cell>{
             newAutomatonIterator.next();
             Set<CellCoordinates> neighbours = neighborsStrategy.cellNeighbors(c.coords);
             Set<Cell> mappedNeighbours = mapCoordinates(neighbours);
-            CellState newState = nextCellState(c.state, mappedNeighbours);
+            CellState newState = nextCellState(c, mappedNeighbours);
             newAutomatonIterator.setState(newState);
         }
         return newCellAutomaton;
@@ -49,7 +49,7 @@ public abstract class Automaton implements Iterable<Cell>{
     protected abstract boolean hasNextCoordinates(CellCoordinates coords);
     protected abstract CellCoordinates initialCoordinates();
     protected abstract CellCoordinates nextCoordinates(CellCoordinates coords);
-    protected abstract CellState nextCellState(CellState currentState, Set<Cell> neighborsStates);
+    protected abstract CellState nextCellState(Cell current, Set<Cell> neighborsStates);
 
     private Set<Cell> mapCoordinates(Set<CellCoordinates> coords){
         TreeSet<Cell> cellsSet = new TreeSet<Cell>();

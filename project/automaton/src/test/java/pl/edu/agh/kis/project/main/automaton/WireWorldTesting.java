@@ -39,4 +39,14 @@ public class WireWorldTesting {
 
         assertEquals(wireWorldStart,wireWorldExpected);
     }
+
+    @Test
+    public void toStringMethodTest_IsEqualToExpected(){
+        Automaton wireWorldStart = new WireWorld(new GeneralStateFactory(wireWorld),wireWorld[0].length,
+                wireWorld.length,false);
+        String expected="00000000\n" +
+                        "THWWWWWW\n" +
+                        "00000000";
+        assertEquals(expected,wireWorldStart.toString());
+    }
 }

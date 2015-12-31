@@ -9,7 +9,7 @@ import java.util.TreeSet;
 /**
  * Created by Kamil on 07.12.2015.
  */
-public class MoorNeighbourhood implements CellNeighborhood{
+public class MoorNeighbourhood implements Cell2DimNeighbourhood{
     public final int r, width, height;
     public final boolean wrap;
 

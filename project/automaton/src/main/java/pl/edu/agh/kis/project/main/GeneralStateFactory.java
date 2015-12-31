@@ -1,6 +1,7 @@
 package pl.edu.agh.kis.project.main;
 
 import pl.edu.agh.kis.project.main.coords.CellCoordinates;
+import pl.edu.agh.kis.project.main.coords.Coords1D;
 import pl.edu.agh.kis.project.main.coords.Coords2D;
 import pl.edu.agh.kis.project.main.states.CellState;
 
@@ -16,6 +17,13 @@ public class GeneralStateFactory implements CellStateFactory{
 
     public GeneralStateFactory(Map<CellCoordinates,CellState> map){
         states = new TreeMap<CellCoordinates,CellState>(map);
+    }
+
+    public GeneralStateFactory(CellState[] initialStates){
+        states = new TreeMap<CellCoordinates, CellState>();
+        for(int i=0;i<initialStates.length;i++){
+            states.put(new Coords1D(i),initialStates[i]);
+        }
     }
 
     public GeneralStateFactory(CellState[][] initialStates){

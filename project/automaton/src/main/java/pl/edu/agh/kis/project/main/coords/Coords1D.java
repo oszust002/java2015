@@ -12,7 +12,7 @@ public class Coords1D implements CellCoordinates {
 
     @Override
     public int compareTo(CellCoordinates o) {
-        Coords2D second = (Coords2D) o;
+        Coords1D second = (Coords1D) o;
         return x-second.x;
     }
 
@@ -22,5 +22,10 @@ public class Coords1D implements CellCoordinates {
             return false;
         Coords1D second = (Coords1D) obj;
         return compareTo(second) == 0;
+    }
+
+    @Override
+    public String toString(){
+        return "["+x+"]";
     }
 }
