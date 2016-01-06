@@ -2,6 +2,7 @@
 # Created by https://www.gitignore.io/api/gradle,intellij,java
 
 ### Gradle ###
+!project/automaton/build/resources/main/images/ant.png
 project/automaton/.gradle
 project/automaton/build/
 
