@@ -11,18 +11,33 @@ import pl.edu.agh.kis.project.main.model.states.WireElectronState;
 import java.util.Set;
 
 /**
- * Created by Kamil on 07.12.2015.
+ * Implementation of WireWorld Automaton
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public class WireWorld extends Automaton2Dim {
+    /**
+     * Creates Automaton based on {@link CellStateFactory}, width and height with wrapping
+     * @param stateFactory {@link CellStateFactory} of initial states
+     * @param width width of Automaton
+     * @param height height of Automaton
+     * @param wrap True if board will be wrapped, False otherwise
+     */
     public WireWorld(CellStateFactory stateFactory, int width, int height,boolean wrap) {
         super(new MoorNeighbourhood(1,width,height,wrap), stateFactory, width, height);
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     protected Automaton newInstance(CellStateFactory factory, CellNeighborhood neighbourhood) {
         return new WireWorld(factory,getWidth(),getHeight(),getWrap());
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     protected CellState nextCellState(Cell current, Set<Cell> neighborsStates) {
         WireElectronState state = (WireElectronState) current.state;
@@ -48,6 +63,9 @@ public class WireWorld extends Automaton2Dim {
         }
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public Class<? extends CellState> getCellStateClass() {
         return WireElectronState.class;

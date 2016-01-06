@@ -7,12 +7,22 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * Created by Kamil on 07.12.2015.
+ * Implementation of {@link CellNeighborhood} in which neighbours coordinates are calculated with specified radius and
+ * wrapping in terms of Von Neumann Neighbourhood
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public class VonNeumanNeighborhood implements Cell2DimNeighbourhood {
     private int width, height, r;
     private boolean wrap;
 
+    /**
+     * Creates instance which calculates neighbours coordinates with specified radius, width, height and wrap
+     * @param r radius on which neighbours coordinates will be calculated
+     * @param width width of the board
+     * @param height height of the board
+     * @param wrap True if should wrap board, False otherwise
+     */
     public VonNeumanNeighborhood(int r, int width, int height, boolean wrap){
         this.r = r;
         this.width = width;
@@ -20,11 +30,21 @@ public class VonNeumanNeighborhood implements Cell2DimNeighbourhood {
         this.wrap = wrap;
     }
 
+    /**
+     * Creates instance which calculates neighbours coordinates with specified width, height and wrap, where radius is 1
+     * @param width width of the board
+     * @param height height of the board
+     * @param wrap True if should wrap board, False otherwise
+     */
     public VonNeumanNeighborhood(int width, int height, boolean wrap){
 
         this(1, width, height, wrap);
     }
 
+    /**
+     *Implementation that supports only {@link Coords2D}
+     * @see CellNeighborhood#cellNeighbors(CellCoordinates)
+     */
     @Override
     public Set<CellCoordinates> cellNeighbors(CellCoordinates cell){
         int r_x;
@@ -48,16 +68,27 @@ public class VonNeumanNeighborhood implements Cell2DimNeighbourhood {
         }
         return neighbours;
     }
-
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public boolean getWrap() {
         return wrap;
     }
 
+    /**
+     *{@inheritDoc}
+     */
+    @Override
     public boolean isOutOfGrid(int x, int y){
         return (x > width-1 || y > height-1) || (x < 0 || y < 0);
     }
 
+    /**
+     * Checks equality of neighbourhoods
+     * @param obj second neighbourhood
+     * @return True if equal, False otherwise
+     */
     @Override
     public boolean equals(Object obj){
         if(!(obj instanceof VonNeumanNeighborhood))
@@ -65,24 +96,32 @@ public class VonNeumanNeighborhood implements Cell2DimNeighbourhood {
         VonNeumanNeighborhood second = (VonNeumanNeighborhood) obj;
         return r == second.r && wrap == second.wrap && width == second.width && height == second.height;
     }
-
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public void setNewSize(CellCoordinates coordinates) {
         Coords2D newSize = (Coords2D) coordinates;
         width = newSize.x;
         height = newSize.y;
     }
-
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public void setWrap(boolean wrap) {
         this.wrap = wrap;
     }
-
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public void setRadius(int r) {
         this.r = r;
     }
-
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public int getRadius() {
         return r;

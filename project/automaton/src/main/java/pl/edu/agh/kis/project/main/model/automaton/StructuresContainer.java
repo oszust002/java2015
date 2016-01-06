@@ -1,15 +1,15 @@
 package pl.edu.agh.kis.project.main.model.automaton;
 
-import pl.edu.agh.kis.project.main.model.Cell;
 import pl.edu.agh.kis.project.main.model.states.BinaryState;
 import pl.edu.agh.kis.project.main.model.states.CellState;
 import pl.edu.agh.kis.project.main.model.states.WireElectronState;
 
 import java.util.HashMap;
-import java.util.TreeMap;
 
 /**
- * Created by Kamil on 05.01.2016.
+ * Container of structures which can be added to Automaton
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public class StructuresContainer {
     private static final HashMap<Class<? extends Automaton2Dim>,Structure[]> structures = insertAllStructures();
@@ -82,15 +82,29 @@ public class StructuresContainer {
         return structurePack;
     }
 
+    /**
+     * Gets array of {@link Structure} for specified Automaton
+     * @param automaton2DClass automaton class
+     * @return array of {@link Structure} for specified Automaton
+     */
     public static Structure[] get(Class<? extends Automaton2Dim> automaton2DClass){
         return structures.get(automaton2DClass);
     }
 
+    /**
+     * Class that holds one structure which can be added to Automaton
+     */
     public static class Structure{
         private final String structureName;
         private final Class<? extends Automaton2Dim> compatibleAutomaton;
         private final CellState[][] structure;
 
+        /**
+         * Creates structure based on name, compatible Automaton and structure array
+         * @param structureName name of structure
+         * @param compatibleAutomaton {@link Automaton} that is compatible with structure
+         * @param structure two dimensional array of {@link CellState}
+         */
         public Structure(String structureName, Class<? extends Automaton2Dim> compatibleAutomaton,
                          CellState[][] structure){
             this.structureName = structureName;
@@ -98,11 +112,19 @@ public class StructuresContainer {
             this.structure = structure;
         }
 
+        /**
+         * Converts {@link Structure} to String
+         * @return name of the structure
+         */
         @Override
         public String toString() {
             return structureName;
         }
 
+        /**
+         * Gets structure array
+         * @return two dimensional array of {@link CellState}
+         */
         public CellState[][] getStructure() {
             return structure;
         }

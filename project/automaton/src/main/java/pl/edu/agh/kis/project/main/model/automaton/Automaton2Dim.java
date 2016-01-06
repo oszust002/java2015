@@ -11,12 +11,21 @@ import pl.edu.agh.kis.project.main.model.states.CellState;
 import java.util.TreeMap;
 
 /**
- * Created by Kamil on 24.11.2015.
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public abstract class Automaton2Dim extends Automaton {
     private int width;
     private int height;
 
+    /**
+     * Creates two dimensional Automaton with specified {@link CellNeighborhood}, {@link CellStateFactory},
+     * width and height
+     * @param neighboursStrategy {@link CellNeighborhood} strategy of getting neighbours of cell
+     * @param stateFactory {@link CellStateFactory} of initial states
+     * @param width width of Automaton
+     * @param height height of Automaton
+     */
     public Automaton2Dim(CellNeighborhood neighboursStrategy, CellStateFactory stateFactory, int width, int height) {
         super(neighboursStrategy, stateFactory);
         this.width = width;
@@ -30,6 +39,9 @@ public abstract class Automaton2Dim extends Automaton {
         this.insertStructure(cells);
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     protected boolean hasNextCoordinates(CellCoordinates coords) {
         if(!(coords instanceof Coords2D))
@@ -45,11 +57,17 @@ public abstract class Automaton2Dim extends Automaton {
             return coords2D.y == height - 1 && (coords2D.x - (width - 1)) < 0;
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     protected CellCoordinates initialCoordinates() {
         return new Coords2D(-1,-1);
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     protected CellCoordinates nextCoordinates(CellCoordinates coords) {
             Coords2D coords2D = (Coords2D) coords;
@@ -61,15 +79,26 @@ public abstract class Automaton2Dim extends Automaton {
                 return new Coords2D(coords2D.x+1, coords2D.y);
     }
 
-
+    /**
+     * Gets width of current {@link Automaton2Dim}
+     * @return width of Automaton
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * Gets height of current {@link Automaton2Dim}
+     * @return height of Automaton
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * Convert {@link Automaton2Dim} to String
+     * @return String representing Automaton
+     */
     @Override
     public String toString(){
         StringBuilder stringBuilder = new StringBuilder();
@@ -83,6 +112,9 @@ public abstract class Automaton2Dim extends Automaton {
         return stringBuilder.toString();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void resize(int newWidth, int newHeight) {
         int biggerX = (newWidth>width) ? newWidth : width;
@@ -99,6 +131,12 @@ public abstract class Automaton2Dim extends Automaton {
         getNeighbourhood().setNewSize(new Coords2D(newWidth,newHeight));
     }
 
+    /**
+     * Inserts specified structure in Automaton, starting from given {@link Coords2D}
+     * @param structure structure built from array of {@link CellState}
+     * @param start {@link Coords2D} from which putting structure is started
+     * @throws InvalidCoordsException if start coords are larger than size of Automaton
+     */
     public void putStructure(CellState[][] structure, Coords2D start) {
         if(start.x > width || start.y > height)
             throw new InvalidCoordsException();

@@ -1,11 +1,17 @@
 package pl.edu.agh.kis.project.main.model.states;
 
 /**
- * Created by Kamil on 23.11.2015.
+ * Representation of ant direction in {@link LangtonCell}
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public enum AntState {
     NONE, NORTH, SOUTH, EAST, WEST;
 
+    /**
+     * Converts {@link AntState} to String
+     * @return converted {@link AntState}
+     */
     @Override
     public String toString() {
         switch (this){
@@ -24,6 +30,11 @@ public enum AntState {
         }
     }
 
+    /**
+     * Returns new ant direction after turning left
+     * @param state current ant direction
+     * @return new ant direction
+     */
     public static AntState rotateRight(AntState state){
         switch (state){
             case NORTH:
@@ -39,6 +50,11 @@ public enum AntState {
         }
     }
 
+    /**
+     * Returns new ant direction after turning left
+     * @param state current ant direction
+     * @return new ant direction
+     */
     public static AntState rotateLeft(AntState state){
         switch (state){
             case NORTH:

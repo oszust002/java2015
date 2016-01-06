@@ -14,19 +14,33 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by Kamil on 31.12.2015.
+ * Implementation of QuadLife Automaton
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public class QuadLife extends GameOfLife{
-
+    /**
+     * Creates Automaton based on {@link Cell2DimNeighbourhood}, {@link CellStateFactory}, width and height
+     * @param neighborhood {@link CellNeighborhood} strategy of getting neighbours of cell
+     * @param factory {@link CellStateFactory} of initial states
+     * @param width width of Automaton
+     * @param height height of Automaton
+     */
     public QuadLife(Cell2DimNeighbourhood neighborhood, CellStateFactory factory, int width, int height) {
         super(neighborhood, factory, "23/3", width, height);
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     protected Automaton newInstance(CellStateFactory factory, CellNeighborhood neighbourhood) {
         return new QuadLife((Cell2DimNeighbourhood) neighbourhood,factory,getWidth(),getHeight());
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     protected CellState nextCellState(Cell current, Set<Cell> neighborsStates) {
         Map<LifeState,Integer> aliveNeighbours= getAliveNeighbours(neighborsStates);
@@ -46,6 +60,9 @@ public class QuadLife extends GameOfLife{
         return QuadState.DEAD;
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public Class<? extends CellState> getCellStateClass() {
         return QuadState.class;

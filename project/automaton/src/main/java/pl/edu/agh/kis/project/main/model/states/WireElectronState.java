@@ -1,11 +1,15 @@
 package pl.edu.agh.kis.project.main.model.states;
 
 /**
- * Created by Kamil on 23.11.2015.
+ * Implementation of {@link CellState} used in {@link pl.edu.agh.kis.project.main.model.automaton.WireWorld}
  */
 public enum WireElectronState implements CellState{
     VOID, WIRE, ELECTRON_HEAD, ELECTRON_TAIL;
 
+    /**
+     * Converts {@link WireElectronState} to String
+     * @return converted {@link WireElectronState}
+     */
     @Override
     public String toString(){
         switch (this){
@@ -22,6 +26,9 @@ public enum WireElectronState implements CellState{
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CellState next(){
         return values()[(this.ordinal()+1) % values().length];

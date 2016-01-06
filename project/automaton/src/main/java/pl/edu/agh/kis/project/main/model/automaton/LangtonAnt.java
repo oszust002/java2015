@@ -15,20 +15,35 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * Created by Kamil on 05.01.2016.
+ * Implementation of Langton Ant Automaton
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public class LangtonAnt extends Automaton2Dim{
     private int antCounter = 0;
 
+    /**
+     * Creates Automaton based on {@link CellStateFactory}, width and height with wrapping
+     * @param stateFactory {@link CellStateFactory} of initial states
+     * @param width width of Automaton
+     * @param height height of Automaton
+     * @param wrap True if should wrap board, False otherwise
+     */
     public LangtonAnt(CellStateFactory stateFactory, int width, int height, boolean wrap) {
         super(new VonNeumanNeighborhood(1,width,height, wrap), stateFactory, width, height);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Automaton newInstance(CellStateFactory factory, CellNeighborhood neighbourhood) {
         return new LangtonAnt(factory,getWidth(),getHeight(),getWrap());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected CellState nextCellState(Cell current, Set<Cell> neighborsStates) {
         Coords2D currentCoords = (Coords2D) current.coords;
@@ -48,11 +63,17 @@ public class LangtonAnt extends Automaton2Dim{
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Class<? extends CellState> getCellStateClass() {
         return LangtonCell.class;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void advanceCellState(CellCoordinates coordinates) {
         LangtonCell langtonCell = (LangtonCell) getCellState(coordinates);

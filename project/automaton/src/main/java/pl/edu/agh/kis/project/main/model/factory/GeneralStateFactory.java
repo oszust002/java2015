@@ -10,15 +10,26 @@ import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
 /**
- * Created by Kamil on 09.12.2015.
+ * Implementation of {@link CellStateFactory} where initial states are held in container
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public class GeneralStateFactory implements CellStateFactory {
     private TreeMap<CellCoordinates, CellState> states;
 
+    /**
+     * Creates state factory based on map of {@link CellCoordinates} and {@link CellState}
+     * @param map map of {@link CellCoordinates} and {@link CellState}
+     */
     public GeneralStateFactory(Map<CellCoordinates,CellState> map){
         states = new TreeMap<CellCoordinates,CellState>(map);
     }
 
+    /**
+     * Creates state factory based on array. Used for {@link pl.edu.agh.kis.project.main.model.automaton.Automaton1Dim}
+     * inital states
+     * @param initialStates array of initial states
+     */
     public GeneralStateFactory(CellState[] initialStates){
         states = new TreeMap<CellCoordinates, CellState>();
         for(int i=0;i<initialStates.length;i++){
@@ -26,6 +37,11 @@ public class GeneralStateFactory implements CellStateFactory {
         }
     }
 
+    /**
+     * Creates state factory based on array. Used for {@link pl.edu.agh.kis.project.main.model.automaton.Automaton2Dim}
+     * inital states
+     * @param initialStates array of initial states
+     */
     public GeneralStateFactory(CellState[][] initialStates){
         states = new TreeMap<CellCoordinates, CellState>();
         for(int i=0;i<initialStates.length;i++)
@@ -33,6 +49,9 @@ public class GeneralStateFactory implements CellStateFactory {
                 states.put(new Coords2D(j,i),initialStates[i][j]);
     }
 
+    /**
+     *{@inheritDoc}
+     */
     public CellState initialState(CellCoordinates coords){
         if(!(states.containsKey(coords)))
             throw new NoSuchElementException();
