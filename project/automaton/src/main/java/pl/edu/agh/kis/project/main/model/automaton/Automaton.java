@@ -124,7 +124,7 @@ public abstract class Automaton implements Iterable<Cell>, Cloneable{
 
     /**
      * Gets {@link CellNeighborhood} used in current Automaton
-     * @return
+     * @return neighbourhood used in current Automaton
      */
     protected CellNeighborhood getNeighbourhood(){
         return neighborsStrategy;
