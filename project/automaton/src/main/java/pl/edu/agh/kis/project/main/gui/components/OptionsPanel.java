@@ -76,7 +76,10 @@ public class OptionsPanel extends Observable implements Observer{
         if(arg.getClass().equals(Boolean.class)) {
             boolean enabled = (Boolean) arg;
             spinnerX.getSpinner().setEnabled(enabled);
-            spinnerY.getSpinner().setEnabled(enabled);
+            if(comboBox.getComboBox().getSelectedItem() == "Automat jednowymiarowy")
+                spinnerY.getSpinner().setEnabled(false);
+            else
+                spinnerY.getSpinner().setEnabled(enabled);
             comboBox.getComboBox().setEnabled(enabled);
             if(!enabled)
                 rulesPanel.setEverythingEnabled(false);
