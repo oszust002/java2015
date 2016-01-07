@@ -149,7 +149,7 @@ public abstract class Automaton2Dim extends Automaton {
                     coordsX = Math.floorMod(coordsX,width);
                     coordsY = Math.floorMod(coordsY,height);
                 }
-                if(coordsX < width-1 && coordsY < height-1){
+                if(coordsX < width && coordsY < height){
                     setCell(new Coords2D(coordsX,coordsY),structure[y][x]);
                 }
             }

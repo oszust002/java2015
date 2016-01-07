@@ -56,6 +56,8 @@ public class QuadLife extends GameOfLife{
             if(dominantState == null){
                 return getNotExistingState(aliveNeighbours);
             }
+            else
+                return dominantState;
         }
         return QuadState.DEAD;
     }
