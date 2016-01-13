@@ -3,8 +3,8 @@
 
 ### Gradle ###
 !project/automaton/build/resources/main/images/ant.png
-project/automaton/.gradle
-project/automaton/build/
+.gradle
+build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
