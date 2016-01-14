@@ -25,11 +25,11 @@ public class QuadLifeTest {
 
     private QuadState[][] expected = {
             {QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD},
-            {QuadState.DEAD, QuadState.RED, QuadState.GREEN, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD},
-            {QuadState.DEAD, QuadState.BLUE, QuadState.YELLOW, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD},
             {QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD},
             {QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD},
-            {QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD},
+            {QuadState.DEAD, QuadState.DEAD, QuadState.BLUE, QuadState.DEAD, QuadState.YELLOW, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD},
+            {QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.BLUE, QuadState.RED, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD},
+            {QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.BLUE, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD},
             {QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD},
             {QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD},
             {QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD, QuadState.DEAD},

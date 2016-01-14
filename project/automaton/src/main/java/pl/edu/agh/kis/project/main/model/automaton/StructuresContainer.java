@@ -47,7 +47,7 @@ public class StructuresContainer {
         final CellState[][] notGate = new CellState[][]{
                 {WireElectronState.VOID,WireElectronState.WIRE,WireElectronState.VOID},
                 {WireElectronState.WIRE,WireElectronState.WIRE,WireElectronState.WIRE},
-                {WireElectronState.WIRE,WireElectronState.WIRE,WireElectronState.WIRE}
+                {WireElectronState.VOID,WireElectronState.WIRE,WireElectronState.VOID}
         };
 
         final CellState[][] xorGate = new CellState[][]{
