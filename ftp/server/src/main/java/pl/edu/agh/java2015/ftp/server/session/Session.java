@@ -1,8 +1,10 @@
 package pl.edu.agh.java2015.ftp.server.session;
 
+import pl.edu.agh.java2015.ftp.server.response.Response;
 import pl.edu.agh.java2015.ftp.server.User;
 import pl.edu.agh.java2015.ftp.server.command.Command;
 import pl.edu.agh.java2015.ftp.server.command.CommandHandler;
+import pl.edu.agh.java2015.ftp.server.response.ResponseType;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -18,7 +20,6 @@ public class Session implements Runnable{
     public Session(Socket socket) throws IOException {
         this.commandHandler = new CommandHandler(socket);
     }
-
 
     @Override
     public void run() {
@@ -39,5 +40,9 @@ public class Session implements Runnable{
 
     public void quit(){
         isRunning = false;
+    }
+
+    public void sendResponse(ResponseType response){
+      //  commandHandler.sendResponse(response);
     }
 }

@@ -25,8 +25,8 @@ public class Command {
         return type;
     }
 
-    public String[] getArguments() {
-        return arguments;
+    public String getArgument(int i) {
+        return arguments[i];
     }
 
     @Override
@@ -37,17 +37,7 @@ public class Command {
                 '}';
     }
 
-    public enum CommandType{
-        USER(1), PASS(1), QUIT(0), NOOP(0), PASV(0), STOR(1), RETR(1), APPE(1), ABOR(0), DELE(1), RMD(1),
-        MKD(1), PWD(0), LIST(0), CWD(1), CHMOD(2), NOTHANDLED(0);
-
-
-        private final int numberOfArgs;
-        CommandType(int numberOfArgs){
-            this.numberOfArgs = numberOfArgs;
-        }
-        public int getNumberOfArgs() {
-            return numberOfArgs;
-        }
+    public boolean hasCorrectArgumentsAmount(){
+        return type.getNumberOfArgs() == arguments.length;
     }
 }

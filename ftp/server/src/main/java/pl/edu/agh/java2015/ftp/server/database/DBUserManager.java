@@ -3,6 +3,7 @@ package pl.edu.agh.java2015.ftp.server.database;
 import pl.edu.agh.java2015.ftp.server.User;
 import pl.edu.agh.java2015.ftp.server.exceptions.DatabaseException;
 
+import javax.xml.crypto.Data;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
@@ -15,16 +16,17 @@ public class DBUserManager {
 
     private static final String SELECT_USER_QUERY = "SELECT * FROM users WHERE username = ?";
     private static final String SELECT_USER_BY_ID = "SELECT * FROM users WHERE id = ?";
+    private static final String CREATE_USER_QUERY = "INSERT INTO users (username, password, salt) VALUES (?,?,?)";
 
     public DBUserManager(DBConnectionsManager connections) {
         this.connections = connections;
     }
 
-    public User authenticateUser(String username, String password) throws SQLException {
+    public User authenticateUser(String username, String password){
         Connection connection = null;
         try {
-        connection = connections.createConnection();
-        PreparedStatement statement = connection.prepareStatement(SELECT_USER_QUERY);
+            connection = connections.createConnection();
+            PreparedStatement statement = connection.prepareStatement(SELECT_USER_QUERY);
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
             if (!resultSet.next())
@@ -36,8 +38,8 @@ public class DBUserManager {
             if (!hash.equals(resultSet.getString("password")))
                 return null;
             return new User(username, password, salt, id);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
         }finally {
             connections.releaseConncection(connection);
         }
@@ -75,7 +77,6 @@ public class DBUserManager {
                 return null;
             return new User(username,resultSet.getString("password"),
                     resultSet.getString("salt"),resultSet.getInt("id"));
-
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }finally {
@@ -83,13 +84,44 @@ public class DBUserManager {
         }
     }
 
-    public String generateHash(String password, String salt) throws NoSuchAlgorithmException {
-        MessageDigest md5 = MessageDigest.getInstance("MD-5");
-        md5.update(salt.getBytes());
-        byte[] bytes = md5.digest(password.getBytes());
-        StringBuilder builder = new StringBuilder();
-        for(byte oneByte : bytes)
-            builder.append(Integer.toString((oneByte & 0xff)+0x100,16).substring(1));
-        return builder.toString();
+    private String generateHash(String password, String salt){
+        try {
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            md5.update(salt.getBytes());
+            byte[] bytes = md5.digest(password.getBytes());
+            StringBuilder builder = new StringBuilder();
+            for(byte oneByte : bytes)
+                builder.append(Integer.toString((oneByte & 0xff)+0x100,16).substring(1));
+            return builder.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int createUser(String username, String password, String salt){
+        Connection connection = null;
+        try {
+            connection = connections.createConnection();
+            User checkExist = findUserByUsername(username);
+            if(checkExist != null)
+                return -1;
+            PreparedStatement statement = connection.prepareStatement(CREATE_USER_QUERY, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, username);
+            String hashedPassword = generateHash(password, salt);
+            statement.setString(1, username);
+            statement.setString(2,hashedPassword);
+            statement.setString(3,salt);
+            statement.executeUpdate();
+
+            ResultSet resultSet = statement.getGeneratedKeys();
+            if(resultSet.next())
+                return resultSet.getInt(1);
+            else
+                throw new DatabaseException("Failed to create user: " + username);
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }finally {
+            connections.releaseConncection(connection);
+        }
     }
 }

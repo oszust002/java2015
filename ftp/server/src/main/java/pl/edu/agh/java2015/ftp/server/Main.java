@@ -14,5 +14,6 @@ public class Main {
         DBUserManager userManager = new DBUserManager(connectionsManager);
         SessionsManager sessionsManager = new SessionsManager(userManager,4);
         sessionsManager.start();
+
     }
 }

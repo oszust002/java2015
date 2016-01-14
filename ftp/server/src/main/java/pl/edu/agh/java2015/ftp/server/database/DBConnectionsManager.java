@@ -15,8 +15,8 @@ public class DBConnectionsManager {
     private String databaseName;
 
     //private Connection dbConnection = null;
-    private LinkedList<Connection> freeConnections;
-    private LinkedList<Connection> usedConnections;
+    private LinkedList<Connection> freeConnections = new LinkedList<Connection>();
+    private LinkedList<Connection> usedConnections = new LinkedList<Connection>();
     private static DBConnectionsManager instance = null;
 
 

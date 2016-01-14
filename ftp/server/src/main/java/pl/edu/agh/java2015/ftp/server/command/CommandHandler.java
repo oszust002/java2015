@@ -1,6 +1,7 @@
 package pl.edu.agh.java2015.ftp.server.command;
 
 import pl.edu.agh.java2015.ftp.server.command.Command;
+import pl.edu.agh.java2015.ftp.server.response.Response;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -32,12 +33,12 @@ public class CommandHandler {
         }
 
         String[] splittedCommand = userCommand.split(" ");
-        Command.CommandType type;
+        CommandType type;
         try {
-            type = Command.CommandType.valueOf(splittedCommand[0]);
+            type = CommandType.valueOf(splittedCommand[0]);
         }catch (IllegalArgumentException e){
             System.out.println("Command unknown");
-            type = Command.CommandType.NOTHANDLED;
+            type = CommandType.NOTHANDLED;
         }
         final String[] arguments = Arrays.copyOfRange(splittedCommand, 1, splittedCommand.length);
         Command command = new Command(type, arguments);
@@ -45,7 +46,10 @@ public class CommandHandler {
         return command;
     }
 
-    public void sendResponse(){}//FIXME: implement
+    public void sendResponse(Response response){
+        output.print(response.toSendString());
+        System.out.println("Response has been sent: "+response);
+    }
 
     public void closeSocket(){
         try {
