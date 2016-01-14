@@ -35,7 +35,7 @@ public class SessionsManager {
     }
 
     private void startSession(Socket socket) throws IOException {
-        executorService.submit(new Session(socket));
+        executorService.submit(new Session(socket,userManager));
     }
 
 }

@@ -10,14 +10,29 @@ import pl.edu.agh.java2015.ftp.server.session.Session;
 public class CommandExecutor {
     private final Session session;
 
+
     public CommandExecutor(Session session){
         this.session = session;
     }
 
     public void executeCommand(Command command){
-        if(!command.hasCorrectArgumentsAmount()){
+        if( !command.hasCorrectArgumentsAmount()){
             System.out.println("Error in command: " + command + ", Invalid number of args");
-            //session.sendResponse(new Response());
+            session.sendResponse(ResponseType.SYNTAX_ERROR);
+            return;
+        }
+        if (!session.isAuthenticated() &&
+                (command.getType() != CommandType.PASS && command.getType() != CommandType.USER)){
+            session.sendResponse(ResponseType.BAD_SEQUENCE_OF_COMMANDS);
+            return;
+        }
+
+        switch (command.getType()){
+            case USER:
+                session.setUsername(command.getArgument(0));
+                break;
+            case PASS:
+                session.checkPassword(command.getArgument(0));
         }
     }
 }

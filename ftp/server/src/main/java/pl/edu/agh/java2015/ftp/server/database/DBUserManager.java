@@ -22,22 +22,27 @@ public class DBUserManager {
         this.connections = connections;
     }
 
-    public User authenticateUser(String username, String password){
+    public boolean authenticateUser(User user, String password){
+        if(user == null || user.getPassword() != null)
+            throw new IllegalArgumentException("User not exist or is already authenticated");
         Connection connection = null;
         try {
             connection = connections.createConnection();
             PreparedStatement statement = connection.prepareStatement(SELECT_USER_QUERY);
-            statement.setString(1, username);
+            statement.setString(1, user.getUsername());
             ResultSet resultSet = statement.executeQuery();
             if (!resultSet.next())
-                return null;
+                return false;
             String salt, hash;
             salt = resultSet.getString("salt");
             hash = generateHash(password, salt);
             Integer id = resultSet.getInt("id");
             if (!hash.equals(resultSet.getString("password")))
-                return null;
-            return new User(username, password, salt, id);
+                return false;
+            user.setPassword(salt);
+            user.setSalt(salt);
+            user.setId(id);
+            return true;
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }finally {
@@ -99,12 +104,11 @@ public class DBUserManager {
     }
 
     public int createUser(String username, String password, String salt){
+        if(userExist(username))
+            return -1;
         Connection connection = null;
         try {
             connection = connections.createConnection();
-            User checkExist = findUserByUsername(username);
-            if(checkExist != null)
-                return -1;
             PreparedStatement statement = connection.prepareStatement(CREATE_USER_QUERY, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, username);
             String hashedPassword = generateHash(password, salt);
@@ -118,6 +122,23 @@ public class DBUserManager {
                 return resultSet.getInt(1);
             else
                 throw new DatabaseException("Failed to create user: " + username);
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }finally {
+            connections.releaseConncection(connection);
+        }
+    }
+
+    public boolean userExist(String username){
+        if(username == null)
+            return false;
+        Connection connection = null;
+        try {
+            connection = connections.createConnection();
+            PreparedStatement statement = connection.prepareStatement(SELECT_USER_QUERY);
+            statement.setString(1,username);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }finally {

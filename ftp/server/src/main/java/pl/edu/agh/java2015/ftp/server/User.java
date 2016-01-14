@@ -5,14 +5,26 @@ package pl.edu.agh.java2015.ftp.server;
  */
 public class User {
     private Integer id;
-    private String username;
-    private String password;
-    private String salt;
+    private String username = null;
+    private String password = null;
+    private String salt = null;
 
     public User(String username, String password, String salt, Integer id){
         this.id = id;
         this.username = username;
         this.password = password;
+        this.salt = salt;
+    }
+
+    public User(String username){
+        this(username,null,null, null);
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setSalt(String salt) {
         this.salt = salt;
     }
 
