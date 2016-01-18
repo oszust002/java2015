@@ -1,10 +1,13 @@
 package pl.edu.agh.java2015.ftp.server.session;
 
+import pl.edu.agh.java2015.ftp.server.Filesystem;
 import pl.edu.agh.java2015.ftp.server.database.DBUserManager;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -35,7 +38,9 @@ public class SessionsManager {
     }
 
     private void startSession(Socket socket) throws IOException {
-        executorService.submit(new Session(socket,userManager));
+        executorService.submit(new Session(socket,userManager,
+                new Filesystem(Paths.get(System.getProperty("user.dir")+"\\ftp")),
+                executorService));
     }
 
 }

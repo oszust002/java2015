@@ -37,8 +37,11 @@ public class DBUserManager {
             salt = resultSet.getString("salt");
             hash = generateHash(password, salt);
             Integer id = resultSet.getInt("id");
-            if (!hash.equals(resultSet.getString("password")))
+            if (!hash.equals(resultSet.getString("password"))) {
+                System.out.println("Wrong password for user: " + user + ", actual: " + hash +
+                        ", should be: "+resultSet.getString("password"));
                 return false;
+            }
             user.setPassword(salt);
             user.setSalt(salt);
             user.setId(id);

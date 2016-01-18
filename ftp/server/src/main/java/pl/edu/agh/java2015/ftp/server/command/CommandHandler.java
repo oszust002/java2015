@@ -1,6 +1,5 @@
 package pl.edu.agh.java2015.ftp.server.command;
 
-import pl.edu.agh.java2015.ftp.server.command.Command;
 import pl.edu.agh.java2015.ftp.server.response.Response;
 
 import java.io.IOException;
@@ -37,7 +36,7 @@ public class CommandHandler {
         try {
             type = CommandType.valueOf(splittedCommand[0]);
         }catch (IllegalArgumentException e){
-            System.out.println("Command unknown");
+            System.out.println("Command unknown: "+splittedCommand[0]);
             type = CommandType.NOTHANDLED;
         }
         final String[] arguments = Arrays.copyOfRange(splittedCommand, 1, splittedCommand.length);

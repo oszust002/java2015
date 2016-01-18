@@ -12,7 +12,7 @@ public class Main {
         System.out.println("Starting server");
         DBConnectionsManager connectionsManager = DBConnectionsManager.createInstance();
         DBUserManager userManager = new DBUserManager(connectionsManager);
-        SessionsManager sessionsManager = new SessionsManager(userManager,4);
+        SessionsManager sessionsManager = new SessionsManager(userManager,8);
         sessionsManager.start();
 
     }
