@@ -22,7 +22,7 @@ public class SessionsManager {
 
     public SessionsManager(DBUserManager manager, int threadPoolSize){
         userManager = manager;
-        executorService = Executors.newFixedThreadPool(threadPoolSize);
+        executorService = Executors.newCachedThreadPool();
     }
 
     public void start(){

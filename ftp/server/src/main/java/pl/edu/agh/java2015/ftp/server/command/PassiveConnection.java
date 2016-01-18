@@ -23,8 +23,10 @@ public class PassiveConnection {
         this.executorService = executorService;
         try {
             this.serverSocket = new ServerSocket(0);
+            System.out.print("Started passive connection on port: " + serverSocket.getLocalPort());
         } catch (Exception e) {
             throw new RuntimeException(e);
+
         }
         accept();
     }

@@ -9,7 +9,7 @@ public enum ResponseType {
     USER_LOGGED_IN(             230, "User logged in", 0),
     BYE(                        221, "Bye", 0),
     COMMAND_SUCCESSFUL(         200, "Command successful",0),
-    ENTERING_PASSIVE_MODE(      227, "Entering passive mode (%d,%d,&d,%d,%d,%d)",6),
+    ENTERING_PASSIVE_MODE(      227, "Entering passive mode (%d,%d,%d,%d,%d,%d)",6),
     TRANSFER_COMPLETE(          150, "Transfer complete", 0),
     REQUEST_SUCCESSFUL(         250, "%s was succesful",1),
     CURRENT_DIRECTORY(          257, "\"%s\" is current directory", 1),
