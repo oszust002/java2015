@@ -109,15 +109,24 @@ public class Session implements Runnable{
         return user != null;
     }
 
-    public void passiveConnection() {
-        if(!passiveConnectionExist()){
+    public void createPassiveConnection() {
             passiveConnection = new PassiveConnection(this,executorService);
             int port = passiveConnection.getPort();
             sendResponse(ResponseType.ENTERING_PASSIVE_MODE, 127, 0, 0, 1, port / 256, port % 256);
-        }
+    }
+
+    public PassiveConnection getPassiveConnection(){
+        return passiveConnection;
     }
 
     public boolean passiveConnectionExist(){
         return passiveConnection != null;
+    }
+
+    public void successfulTransfer(boolean status) {
+        if(status)
+            sendResponse(ResponseType.TRANSFER_COMPLETE);
+        else
+            sendResponse(ResponseType.ACTION_ABORTED_LOCAL);
     }
 }

@@ -45,11 +45,35 @@ public class CommandExecutor {
                 session.disconnect();
                 break;
             case LIST:
-                System.out.print(filesystem.showFilesOnPath(Paths.get("")));
+                fileList(session);
                 break;
             case PASV:
-                session.passiveConnection();
+                session.createPassiveConnection();
                 break;
+            case PWD:
+                showCWD(filesystem.getCurrentDirectoryPath());
         }
     }
+
+    private void showCWD(Path currentDirectoryPath) {
+        String path = currentDirectoryPath.toString();
+        if(path.equals(""))
+            session.sendResponse(ResponseType.CURRENT_DIRECTORY, "/");
+        else
+            session.sendResponse(ResponseType.CURRENT_DIRECTORY, path.toString());
+    }
+
+    private void fileList(Session session) {
+        if(session.passiveConnectionExist()){
+                session.getPassiveConnection().sendFileList(filesystem.showFilesOnPath(Paths.get("")));
+                session.sendResponse(ResponseType.PASSIVE_CONNECTION, "ASCII", "/bin/ls");
+        }
+        else{
+            session.sendResponse(ResponseType.CANT_OPEN_DATA_CONNECTION);
+        }
+
+
+    }
+
+
 }

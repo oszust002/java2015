@@ -31,10 +31,8 @@ public class Command {
 
     @Override
     public String toString() {
-        return "Command{" +
-                "type=" + type +
-                ", arguments=" + Arrays.toString(arguments) +
-                '}';
+        return "Command: "+ type +
+                ", arguments=" + Arrays.toString(arguments);
     }
 
     public boolean hasCorrectArgumentsAmount(){

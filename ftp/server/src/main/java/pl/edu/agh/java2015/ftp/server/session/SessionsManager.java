@@ -39,7 +39,7 @@ public class SessionsManager {
 
     private void startSession(Socket socket) throws IOException {
         executorService.submit(new Session(socket,userManager,
-                new Filesystem(Paths.get(System.getProperty("user.dir")+"\\ftp")),
+                new Filesystem(Paths.get("")),
                 executorService));
     }
 

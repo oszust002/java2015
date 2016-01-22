@@ -47,7 +47,7 @@ public class CommandHandler {
 
     public void sendResponse(Response response){
         output.print(response.toSendString());
-        System.out.println("Response has been sent: "+response);
+        System.out.println("Server response: "+response);
     }
 
     public void closeSocket(){
