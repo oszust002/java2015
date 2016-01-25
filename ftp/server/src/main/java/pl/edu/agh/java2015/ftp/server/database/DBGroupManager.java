@@ -17,6 +17,8 @@ public class DBGroupManager {
             "SELECT * FROM user_group WHERE user_id = ? AND group_id = ?";
 
     private static final String SELECT_FROM_GROUPS_WHERE_ID = "SELECT * FROM groups WHERE id = ?";
+    private static final String SELECT_GROUP_FROM_USER_GROUP_WHERE_USER_ID =
+            "SELECT group_id FROM user_group WHERE user_id = ?";
 
     private final DBConnectionsManager connectionsManager;
 
@@ -53,8 +55,28 @@ public class DBGroupManager {
             return new Group(id,groupname);
         } catch (SQLException e) {
             throw new DatabaseException(e);
+        } finally {
+            connectionsManager.releaseConncection(connection);
         }
     }
 
 
+    public int getUserGroupId(User user) {
+        Connection connection = null;
+        try {
+            connection = connectionsManager.createConnection();
+            PreparedStatement statement = connection.prepareStatement(SELECT_GROUP_FROM_USER_GROUP_WHERE_USER_ID);
+            statement.setInt(1,user.getId());
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next())
+                return resultSet.getInt("group_id");
+            else
+                throw new DatabaseException("User " + user.getUsername() + " is not in any group(should have " +
+                        "been in at least one)");
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        } finally {
+            connectionsManager.releaseConncection(connection);
+        }
+    }
 }

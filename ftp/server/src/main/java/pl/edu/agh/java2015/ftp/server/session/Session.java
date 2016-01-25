@@ -97,16 +97,14 @@ public class Session implements Runnable{
     public void checkPassword(String password) {
         if(!isAuthenticated()){
             boolean authenticate = userManager.authenticateUser(user,password);
-            if(authenticate)
+            if(authenticate) {
+                commandExecutor.setPermissionManager(user);
                 sendResponse(ResponseType.USER_LOGGED_IN);
+            }
             else
                 sendResponse(ResponseType.INVALID_USER_OR_PASSWORD);
         }else
             sendResponse(ResponseType.BAD_SEQUENCE_OF_COMMANDS);
-    }
-
-    public boolean userIsInserted(){
-        return user != null;
     }
 
     public void createPassiveConnection() {
@@ -121,12 +119,5 @@ public class Session implements Runnable{
 
     public boolean passiveConnectionExist(){
         return passiveConnection != null;
-    }
-
-    public void successfulTransfer(boolean status) {
-        if(status)
-            sendResponse(ResponseType.TRANSFER_COMPLETE);
-        else
-            sendResponse(ResponseType.ACTION_ABORTED_LOCAL);
     }
 }

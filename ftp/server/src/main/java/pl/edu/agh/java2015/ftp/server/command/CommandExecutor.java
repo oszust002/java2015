@@ -1,6 +1,7 @@
 package pl.edu.agh.java2015.ftp.server.command;
 
 import pl.edu.agh.java2015.ftp.server.Filesystem;
+import pl.edu.agh.java2015.ftp.server.User;
 import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.FileException;
 import pl.edu.agh.java2015.ftp.server.response.ResponseType;
 import pl.edu.agh.java2015.ftp.server.session.Session;
@@ -56,6 +57,9 @@ public class CommandExecutor {
                 break;
             case CWD:
                 changeDirectory(command.getArgument(0));
+                break;
+            case MKD:
+                createDirectory(command.getArgument(0));
         }
     }
 
@@ -69,7 +73,12 @@ public class CommandExecutor {
 
     private void fileList(Session session) {
         if(session.passiveConnectionExist()){
+            try {
                 session.getPassiveConnection().sendFileList(filesystem.showFilesOnPath(Paths.get("")));
+            }catch (FileException e){
+                session.sendResponse(e.getResponse());
+                return;
+            }
                 session.sendResponse(ResponseType.PASSIVE_CONNECTION, "ASCII", "/bin/ls");
         }
         else{
@@ -84,5 +93,18 @@ public class CommandExecutor {
         }catch (FileException e){
             session.sendResponse(e.getResponse());
         }
+    }
+
+    private void createDirectory(String path){
+        try {
+            filesystem.createDirectory(path);
+            session.sendResponse(ResponseType.REQUEST_SUCCESSFUL, "MKD");
+        } catch (FileException e) {
+            session.sendResponse(e.getResponse());
+        }
+    }
+
+    public void setPermissionManager(User user) {
+        filesystem.setPermissions(user);
     }
 }

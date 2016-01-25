@@ -1,12 +1,13 @@
 package pl.edu.agh.java2015.ftp.server;
 
 import pl.edu.agh.java2015.ftp.server.database.DBFilesManager;
+import pl.edu.agh.java2015.ftp.server.exceptions.FileAlreadyExistsException;
 import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.FileException;
 import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.FileNotExistsException;
-import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.FilesystemException;
 import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.NotDirectoryException;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,6 +19,7 @@ public class Filesystem {
     private Path currentDirectoryPath;
     private final DBFilesManager filesManager;
     private final Path absolute = Paths.get(System.getProperty("user.dir")+"\\ftp");
+    private Permissions permissions;
 
 
     public Filesystem(Path currentDirectoryPath, DBFilesManager filesManager){
@@ -25,10 +27,14 @@ public class Filesystem {
         this.filesManager = filesManager;
     }
 
-    public String showFilesOnPath(Path path){
+    public void setPermissions(User user){
+        permissions = new Permissions(user);
+    }
+
+    public String showFilesOnPath(Path path) throws NotDirectoryException {
         path = getIfRelative(path);
         if(!Files.isDirectory(path))
-            throw new FilesystemException();
+            throw new NotDirectoryException(path.toString());
         StringBuilder stringBuilder = new StringBuilder();
         File directory = new File(path.toUri());
         File[] files = directory.listFiles();
@@ -63,7 +69,8 @@ public class Filesystem {
     }
 
     public void changeDirectory(String path) throws FileException {
-        Path newPath = currentDirectoryPath.resolve(path).normalize();
+
+        Path newPath = normalizePath(path);
         if(isPathRoot(newPath)) {
             currentDirectoryPath = Paths.get("");
             System.out.println("New current directory: /");
@@ -71,7 +78,7 @@ public class Filesystem {
         else if(filesManager.fileExists(newPath.toString())){
             if(isPathToDirectory(newPath)) {
                 currentDirectoryPath = newPath;
-                System.out.println("New current directory: "+newPath);
+                System.out.println("New current directory: /"+newPath);
             }
             else
                 throw new NotDirectoryException(newPath.toString());
@@ -81,6 +88,46 @@ public class Filesystem {
 
     }
 
+    public void createDirectory(String path) throws FileException {
+        Path newPath = normalizePath(path);
+        Path parentPath = getParentPath(newPath);
+        if(filesManager.fileExists(newPath.toString()))
+            throw new FileAlreadyExistsException(newPath.toString());
+        if(!parentPath.toString().equals("") && !filesManager.fileExists(parentPath.toString())){
+            throw new FileNotExistsException(parentPath.toString());
+        }
+        if(!isPathToDirectory(parentPath))
+            throw new NotDirectoryException(parentPath.toString());
+        try {
+            Files.createDirectory(absolute.resolve(newPath));
+            permissions.addFileToDatabase(newPath);
+        } catch (IOException e) {
+            throw new FileException(e);
+        }
+
+    }
+
+    private Path getParentPath(Path newPath) {
+        if(newPath.getParent() == null)
+            return Paths.get("");
+        else
+            return newPath.getParent();
+    }
+
+    private Path normalizePath(String path) {
+        if(isAbsolutePath(path)){
+            path = path.substring(1,path.length());
+            return Paths.get(path);
+        }
+        else {
+             return currentDirectoryPath.resolve(path).normalize();
+        }
+    }
+
+    private boolean isAbsolutePath(String path) {
+        return path.charAt(0) == '/' || path.charAt(0) == '\\';
+    }
+
     private boolean isPathToDirectory(Path newPath) {
         Path path = absolute.resolve(newPath);
         return Files.isDirectory(path);
@@ -88,5 +135,17 @@ public class Filesystem {
 
     private boolean isPathRoot(Path path){
         return path.toString().equals("") || path.toString().contains("..");
+    }
+
+    private class Permissions{
+        private final User user;
+
+        public Permissions(User user){
+            this.user = user;
+        }
+
+        public void addFileToDatabase(Path path){
+            filesManager.addFileOrDirectory(path, user);
+        }
     }
 }
