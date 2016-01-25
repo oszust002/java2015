@@ -1,6 +1,7 @@
 package pl.edu.agh.java2015.ftp.server.command;
 
 import pl.edu.agh.java2015.ftp.server.Filesystem;
+import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.FileException;
 import pl.edu.agh.java2015.ftp.server.response.ResponseType;
 import pl.edu.agh.java2015.ftp.server.session.Session;
 
@@ -52,6 +53,9 @@ public class CommandExecutor {
                 break;
             case PWD:
                 showCWD(filesystem.getCurrentDirectoryPath());
+                break;
+            case CWD:
+                changeDirectory(command.getArgument(0));
         }
     }
 
@@ -71,9 +75,14 @@ public class CommandExecutor {
         else{
             session.sendResponse(ResponseType.CANT_OPEN_DATA_CONNECTION);
         }
-
-
     }
 
-
+    private void changeDirectory(String path){
+        try {
+            filesystem.changeDirectory(path);
+            session.sendResponse(ResponseType.REQUEST_SUCCESSFUL, "CWD");
+        }catch (FileException e){
+            session.sendResponse(e.getResponse());
+        }
+    }
 }
