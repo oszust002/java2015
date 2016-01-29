@@ -26,13 +26,13 @@ public class DBGroupManager {
         this.connectionsManager = connectionsManager;
     }
 
-    public boolean isUserInGroup(User user, Group group){
+    public boolean isUserInGroup(Integer userID, Integer groupID){
         Connection connection = null;
         try {
             connection = connectionsManager.createConnection();
             PreparedStatement statement = connection.prepareStatement(IS_USER_IN_GROUP_QUERY);
-            statement.setInt(1,user.getId());
-            statement.setInt(2,user.getId());
+            statement.setInt(1,userID);
+            statement.setInt(2,groupID);
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (SQLException e) {

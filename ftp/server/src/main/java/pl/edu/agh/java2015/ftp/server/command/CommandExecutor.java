@@ -60,7 +60,30 @@ public class CommandExecutor {
                 break;
             case MKD:
                 createDirectory(command.getArgument(0));
+                break;
+            case RMD:
+                removeDirectory(command.getArgument(0));
+                break;
+            case DELE:
+                removeRegularFile(command.getArgument(0));
         }
+    }
+
+    private void removeRegularFile(String path) {
+        removeCommand(path,false,"DELE");
+    }
+
+    private void removeCommand(String path, boolean isDirectory, String commandName) {
+        try{
+            filesystem.remove(path,isDirectory);
+            session.sendResponse(ResponseType.REQUEST_SUCCESSFUL,commandName);
+        }catch (FileException e){
+            session.sendResponse(e.getResponse());
+        }
+    }
+
+    private void removeDirectory(String path) {
+        removeCommand(path,true,"RMD");
     }
 
     private void showCWD(Path currentDirectoryPath) {
@@ -68,7 +91,7 @@ public class CommandExecutor {
         if(path.equals(""))
             session.sendResponse(ResponseType.CURRENT_DIRECTORY, "/");
         else
-            session.sendResponse(ResponseType.CURRENT_DIRECTORY, path.toString());
+            session.sendResponse(ResponseType.CURRENT_DIRECTORY, "/"+ path);
     }
 
     private void fileList(Session session) {

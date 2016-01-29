@@ -42,7 +42,7 @@ public class DBUserManager {
                         ", should be: "+resultSet.getString("password"));
                 return false;
             }
-            user.setPassword(salt);
+            user.setPassword(hash);
             user.setSalt(salt);
             user.setId(id);
             return true;

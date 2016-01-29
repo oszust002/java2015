@@ -78,6 +78,8 @@ public class Session implements Runnable{
     public void disconnect(){
         sendResponse(ResponseType.BYE);
         isRunning = false;
+        if(passiveConnectionExist())
+            passiveConnection.disconnect();
         commandHandler.closeSocket();
     }
 

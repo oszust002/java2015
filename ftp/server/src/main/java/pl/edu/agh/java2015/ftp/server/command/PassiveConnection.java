@@ -8,6 +8,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -44,6 +45,7 @@ public class PassiveConnection {
                         serverSocket.close();
                         this.notify();
                     }
+                } catch (SocketException ignore){
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -83,5 +85,13 @@ public class PassiveConnection {
 
     public int getPort() {
         return serverSocket.getLocalPort();
+    }
+
+    public void disconnect() {
+        try {
+            serverSocket.close();
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
