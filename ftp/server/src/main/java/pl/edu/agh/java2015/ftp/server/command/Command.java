@@ -10,16 +10,10 @@ public class Command {
     private final CommandType type;
     private final String[] arguments;
 
-    public Command(CommandType type) {
-        this.type = type;
-        arguments = new String[0];
-    }
-
     public Command(CommandType type, String[] arguments) {
         this.type = type;
         this.arguments = arguments;
     }
-
 
     public CommandType getType() {
         return type;

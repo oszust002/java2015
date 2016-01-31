@@ -1,16 +1,15 @@
 package pl.edu.agh.java2015.ftp.server;
 
 import pl.edu.agh.java2015.ftp.server.database.DBFilesManager;
-import pl.edu.agh.java2015.ftp.server.exceptions.FileAlreadyExistsException;
-import pl.edu.agh.java2015.ftp.server.exceptions.NoPermissionsException;
-import pl.edu.agh.java2015.ftp.server.exceptions.NotEmptyDirectoryException;
+import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.FileAlreadyExistsException;
+import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.NoPermissionsException;
+import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.NotEmptyDirectoryException;
 import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.FileException;
 import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.FileNotExistsException;
 import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.NotDirectoryException;
 import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.NotFileException;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -97,7 +96,7 @@ public class Filesystem {
 
     public void createDirectory(String path) throws FileException {
         Path newPath = normalizePath(path);
-        Path parentPath = getParentPath(newPath);
+        Path parentPath = resolveParentPath(newPath);
         Path fullPath = getIfRelative(Paths.get(path));
 
         if(filesManager.fileExists(newPath.toString()))
@@ -114,12 +113,42 @@ public class Filesystem {
         } catch (IOException e) {
             throw new FileException(e);
         }
+    }
 
+    public OutputStream getStream(String path, boolean append) throws FileException{
+        Path filePath = normalizePath(path);
+        Path parentPath = resolveParentPath(filePath);
+        Path fullPath = getIfRelative(Paths.get(path));
+
+        if(!filesManager.fileExists(filePath.toString())){
+            if(!isPathToDirectory(parentPath))
+                throw new NotDirectoryException(parentPath.toString());
+            if(append)
+                throw new FileNotExistsException(filePath.toString());
+            if(!permissions.userCanWrite(parentPath))
+                throw new NoPermissionsException(parentPath.toString());
+            permissions.addFileToDatabase(filePath);
+        }else{
+            if(!Files.isRegularFile(fullPath))
+                throw new NotFileException(filePath.toString());
+            if(!Files.isWritable(fullPath))
+                throw new NoPermissionsException(filePath.toString());
+            if(!permissions.userCanWrite(filePath))
+                throw new NoPermissionsException(parentPath.toString());
+        }
+        try {
+            return new FileOutputStream(fullPath.toString(),append);
+        } catch (IOException e) {
+            if(!append) {
+                permissions.removeFileFromDatabase(filePath);
+            }
+            throw new FileException(e);
+        }
     }
 
     public void remove(String path, boolean isDirectory) throws FileException{
         Path newPath = normalizePath(path);
-        Path parentPath = getParentPath(newPath);
+        Path parentPath = resolveParentPath(newPath);
         Path fullPath = getIfRelative(Paths.get(path));
 
         if(!filesManager.fileExists(newPath.toString()))
@@ -152,7 +181,7 @@ public class Filesystem {
         }
     }
 
-    private Path getParentPath(Path newPath) {
+    private Path resolveParentPath(Path newPath) {
         if(newPath.getParent() == null)
             return Paths.get("");
         else

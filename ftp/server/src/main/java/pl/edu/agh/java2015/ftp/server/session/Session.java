@@ -122,4 +122,8 @@ public class Session implements Runnable{
     public boolean passiveConnectionExist(){
         return passiveConnection != null;
     }
+
+    public void endPassiveConnection(){
+        passiveConnection = null;
+    }
 }

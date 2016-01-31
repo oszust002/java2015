@@ -1,4 +1,4 @@
-package pl.edu.agh.java2015.ftp.server.exceptions;
+package pl.edu.agh.java2015.ftp.server.exceptions.filesystem;
 
 import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.FileException;
 import pl.edu.agh.java2015.ftp.server.response.ResponseType;

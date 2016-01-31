@@ -6,6 +6,9 @@ import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.FileException;
 import pl.edu.agh.java2015.ftp.server.response.ResponseType;
 import pl.edu.agh.java2015.ftp.server.session.Session;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -22,11 +25,12 @@ public class CommandExecutor {
     }
 
     public void executeCommand(Command command){
-        if (!session.isAuthenticated() && (command.getType() != CommandType.PASS && command.getType() != CommandType.USER
-                && command.getType() != CommandType.QUIT)){
+        if (!session.isAuthenticated() && (command.getType() != CommandType.PASS &&
+                command.getType() != CommandType.USER && command.getType() != CommandType.QUIT)){
             session.sendResponse(ResponseType.BAD_SEQUENCE_OF_COMMANDS);
             return;
         }
+
         if( !command.hasCorrectArgumentsAmount()){
             System.out.println("Error in command: " + command + ", Invalid number of args");
             session.sendResponse(ResponseType.SYNTAX_ERROR);
@@ -66,7 +70,29 @@ public class CommandExecutor {
                 break;
             case DELE:
                 removeRegularFile(command.getArgument(0));
+                break;
+            case STOR:
+                addFileToServer(command.getArgument(0),false);
+                break;
+            case APPE:
+                addFileToServer(command.getArgument(0),true);
+                break;
+            case NOTHANDLED:
+                session.sendResponse(ResponseType.COMMAND_NOT_IMPLEMENTED);
         }
+    }
+
+    private void addFileToServer(String path, boolean append) {
+        if(session.passiveConnectionExist()) {
+            try {
+                final OutputStream stream = filesystem.getStream(path, append);
+                session.getPassiveConnection().getData(stream);
+                session.sendResponse(ResponseType.PASSIVE_CONNECTION, "binary", path);
+            } catch (FileException e) {
+                session.sendResponse(e.getResponse());
+            }
+        }else
+            session.sendResponse(ResponseType.CANT_OPEN_DATA_CONNECTION);
     }
 
     private void removeRegularFile(String path) {
@@ -88,21 +114,18 @@ public class CommandExecutor {
 
     private void showCWD(Path currentDirectoryPath) {
         String path = currentDirectoryPath.toString();
-        if(path.equals(""))
-            session.sendResponse(ResponseType.CURRENT_DIRECTORY, "/");
-        else
-            session.sendResponse(ResponseType.CURRENT_DIRECTORY, "/"+ path);
+        session.sendResponse(ResponseType.CURRENT_DIRECTORY, "/"+ path);
     }
 
     private void fileList(Session session) {
         if(session.passiveConnectionExist()){
             try {
-                session.getPassiveConnection().sendFileList(filesystem.showFilesOnPath(Paths.get("")));
+                String filesOnPath = filesystem.showFilesOnPath(Paths.get(""));
+                session.getPassiveConnection().sendFileList(filesOnPath);
+                session.sendResponse(ResponseType.PASSIVE_CONNECTION, "ASCII", "/bin/ls");
             }catch (FileException e){
                 session.sendResponse(e.getResponse());
-                return;
             }
-                session.sendResponse(ResponseType.PASSIVE_CONNECTION, "ASCII", "/bin/ls");
         }
         else{
             session.sendResponse(ResponseType.CANT_OPEN_DATA_CONNECTION);
