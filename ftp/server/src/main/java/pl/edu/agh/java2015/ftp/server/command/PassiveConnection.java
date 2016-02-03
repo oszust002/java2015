@@ -59,15 +59,43 @@ public class PassiveConnection {
                     byte buffer[] = new byte[1024];
                     int number;
                     InputStream inputStream = socket.getInputStream();
-                    while((number = inputStream.read(buffer))>-1) {
+                    while ((number = inputStream.read(buffer)) > -1) {
                         outputStream.write(buffer, 0, number);
                     }
                     outputStream.close();
                     session.endPassiveConnection();
                     session.sendResponse(ResponseType.TRANSFER_COMPLETE);
                     socket.close();
+                }catch (SocketException ignore){
+
                 } catch (Exception e) {
-                    disconnect();
+                    session.endPassiveConnection();
+                    session.sendResponse(ResponseType.ACTION_ABORTED_LOCAL);
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void sendData(InputStream inputStream){
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                waitingForConnection();
+                try{
+                    byte[] buffer = new byte[1024];
+                    int number;
+                    OutputStream outputStream = socket.getOutputStream();
+                    while((number = inputStream.read(buffer))>-1){
+                        outputStream.write(buffer, 0, number);
+                    }
+                    inputStream.close();
+                    session.endPassiveConnection();
+                    session.sendResponse(ResponseType.TRANSFER_COMPLETE);
+                    socket.close();
+                } catch (SocketException ignore){
+                } catch (Exception e){
+                    session.endPassiveConnection();
                     session.sendResponse(ResponseType.ACTION_ABORTED_LOCAL);
                     e.printStackTrace();
                 }
@@ -95,29 +123,41 @@ public class PassiveConnection {
         });
     }
 
-        private void waitingForConnection(){
-            try {
-                synchronized (this){
-                    while (socket == null){
-                        this.wait();
-                    }
+    private void waitingForConnection(){
+        try {
+            synchronized (this){
+                while (socket == null){
+                    this.wait();
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+    }
 
-        public int getPort() {
+    public int getPort() {
             return serverSocket.getLocalPort();
         }
 
-        public void disconnect() {
+    public void disconnect() {
+        try {
+            if(socket!=null)
+                socket.close();
+            serverSocket.close();
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean abort() {
+        if(socket != null) {
             try {
-                if(socket!=null)
-                    socket.close();
-                serverSocket.close();
-            }catch (IOException e) {
+                socket.close();
+                return true;
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+        return false;
     }
+}

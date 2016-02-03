@@ -1,4 +1,7 @@
-package pl.edu.agh.java2015.ftp.server;
+package pl.edu.agh.java2015.ftp.server.database;
+
+import pl.edu.agh.java2015.ftp.server.Group;
+import pl.edu.agh.java2015.ftp.server.User;
 
 /**
  * Created by Kamil on 25.01.2016.

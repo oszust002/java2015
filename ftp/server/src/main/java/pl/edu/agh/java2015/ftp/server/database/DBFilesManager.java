@@ -1,6 +1,5 @@
 package pl.edu.agh.java2015.ftp.server.database;
 
-import pl.edu.agh.java2015.ftp.server.DatabaseFileRecord;
 import pl.edu.agh.java2015.ftp.server.Group;
 import pl.edu.agh.java2015.ftp.server.User;
 import pl.edu.agh.java2015.ftp.server.exceptions.DatabaseException;
@@ -24,6 +23,9 @@ public class DBFilesManager {
     private static final String ADD_FILE_QUERY = "INSERT INTO files (filename, owner_id, group_id) VALUES(?,?,?)";
     private static final String GET_FILE_QUERY = "SELECT * FROM files WHERE filename = ?";
     private static final String DELETE_FILE_WHERE_FILENAME = "DELETE FROM files WHERE filename=?";
+    private static final String UPDATE_FILE_PERMS_QUERY =
+            "UPDATE files SET user_read=?, user_write=?, group_read=?," +
+            " group_write=? WHERE filename=?";
 
     public DBFilesManager(DBConnectionsManager connectionsManager, DBUserManager userManager,
                           DBGroupManager groupManager) {
@@ -98,6 +100,25 @@ public class DBFilesManager {
             String normalized = path.toString().replace("/","\\");
             PreparedStatement statement = connection.prepareStatement(DELETE_FILE_WHERE_FILENAME);
             statement.setString(1,normalized);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        } finally {
+            connectionsManager.releaseConncection(connection);
+        }
+    }
+
+    public void setFilePerms(Path newPath, int[] perms) {
+        Connection connection = null;
+        try {
+            connection = connectionsManager.createConnection();
+            String normalized = newPath.toString().replace("/","\\");
+            PreparedStatement statement = connection.prepareStatement(UPDATE_FILE_PERMS_QUERY);
+            statement.setInt(1,perms[0]);
+            statement.setInt(2,perms[1]);
+            statement.setInt(3,perms[2]);
+            statement.setInt(4,perms[3]);;
+            statement.setString(5,normalized);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DatabaseException(e);

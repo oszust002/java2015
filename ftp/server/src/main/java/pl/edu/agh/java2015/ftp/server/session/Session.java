@@ -126,4 +126,10 @@ public class Session implements Runnable{
     public void endPassiveConnection(){
         passiveConnection = null;
     }
+
+    public void abortPassiveConnection() {
+        if(passiveConnectionExist() && passiveConnection.abort())
+            sendResponse(ResponseType.ABORTED);
+        sendResponse(ResponseType.REQUEST_SUCCESSFUL,"ABORT");
+    }
 }

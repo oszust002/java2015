@@ -1,6 +1,7 @@
 package pl.edu.agh.java2015.ftp.server;
 
 import pl.edu.agh.java2015.ftp.server.database.DBFilesManager;
+import pl.edu.agh.java2015.ftp.server.database.DatabaseFileRecord;
 import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.FileAlreadyExistsException;
 import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.NoPermissionsException;
 import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.NotEmptyDirectoryException;
@@ -115,7 +116,26 @@ public class Filesystem {
         }
     }
 
-    public OutputStream getStream(String path, boolean append) throws FileException{
+    public InputStream getInputStream(String path) throws FileException {
+        Path filePath = normalizePath(path);
+        Path fullPath = getIfRelative(Paths.get(path));
+
+        if(!filesManager.fileExists(filePath.toString()))
+            throw new FileNotExistsException(filePath.toString());
+        if(!Files.isRegularFile(fullPath))
+            throw new NotFileException(filePath.toString());
+        if(!Files.isReadable(fullPath))
+            throw new NoPermissionsException(filePath.toString());
+        if(!permissions.userCanRead(filePath))
+            throw new NoPermissionsException(filePath.toString());
+        try {
+            return new FileInputStream(fullPath.toString());
+        } catch (FileNotFoundException e) {
+            throw new FileException(e);
+        }
+    }
+
+    public OutputStream getOutputStream(String path, boolean append) throws FileException, IOException {
         Path filePath = normalizePath(path);
         Path parentPath = resolveParentPath(filePath);
         Path fullPath = getIfRelative(Paths.get(path));
@@ -140,6 +160,7 @@ public class Filesystem {
             return new FileOutputStream(fullPath.toString(),append);
         } catch (IOException e) {
             if(!append) {
+                Files.delete(fullPath);
                 permissions.removeFileFromDatabase(filePath);
             }
             throw new FileException(e);
@@ -152,11 +173,13 @@ public class Filesystem {
         Path fullPath = getIfRelative(Paths.get(path));
 
         if(!filesManager.fileExists(newPath.toString()))
-            throw new FileAlreadyExistsException(newPath.toString());
+            throw new FileNotExistsException(newPath.toString());
         if(!parentPath.toString().equals("") && !filesManager.fileExists(parentPath.toString()))
             throw new FileNotExistsException(parentPath.toString());
         if(!permissions.userCanWrite(parentPath))
             throw new NoPermissionsException(parentPath.toString());
+        if(!permissions.userCanWrite(newPath))
+            throw new NoPermissionsException(newPath.toString());
         try {
             if(isDirectory){
                 if(!Files.isDirectory(fullPath))
@@ -211,6 +234,27 @@ public class Filesystem {
         return path.toString().equals("") || path.toString().contains("..");
     }
 
+    public void chmod(String path, String numbers) throws FileException {
+        Path newPath = normalizePath(path);
+        if(!filesManager.fileExists(newPath.toString()))
+            throw new FileNotExistsException(newPath.toString());
+        if(!permissions.isOwner(newPath))
+            throw new NoPermissionsException(newPath.toString());
+        int[] perms = getPerms(numbers);
+        filesManager.setFilePerms(newPath, perms);
+    }
+
+    private int[] getPerms(String numbers){
+        int []perms = new int[4];
+        int userChmod = Character.getNumericValue(numbers.charAt(0));
+        int groupChmod = Character.getNumericValue(numbers.charAt(1));
+        perms[0] = (userChmod  == 3 || userChmod == 1) ? 1 : 0;
+        perms[1] = (userChmod  == 3 || userChmod == 2) ? 1 : 0;
+        perms[2] = (groupChmod  == 3 || groupChmod == 1) ? 1 : 0;
+        perms[3] = (groupChmod  == 3 || groupChmod == 2) ? 1 : 0;
+        return perms;
+    }
+
     private class Permissions{
         private final User user;
 
@@ -244,6 +288,13 @@ public class Filesystem {
             if(file.getOwner().equals(user) && file.isOwnerRead())
                 return true;
             else return filesManager.isUserInFileGroup(user, file) && file.isGroupRead();
+        }
+
+        public boolean isOwner(Path path){
+            if(path.toString().equals(""))
+                return true;
+            DatabaseFileRecord file = filesManager.getFile(path.toString());
+            return file.getOwner().equals(user);
         }
     }
 }

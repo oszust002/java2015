@@ -25,6 +25,4 @@ public class Response {
     public String toSendString(){
         return String.valueOf(type.getCode()) + " " + String.format(type.getMessage(), arguments) +"\r\n";
     }
-
-
 }

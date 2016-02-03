@@ -8,6 +8,7 @@ import pl.edu.agh.java2015.ftp.server.session.Session;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,6 +19,7 @@ import java.nio.file.Paths;
 public class CommandExecutor {
     private final Session session;
     private final Filesystem filesystem;
+    private boolean wasAborted = false;
 
     public CommandExecutor(Session session, Filesystem filesystem){
         this.session = session;
@@ -77,19 +79,71 @@ public class CommandExecutor {
             case APPE:
                 addFileToServer(command.getArgument(0),true);
                 break;
+            case RETR:
+                sendFile(command.getArgument(0));
+                break;
+            case ABOR: {
+                wasAborted = true;
+                abort();
+                }
+                break;
+            case CHMOD:
+                changeFilePermissions(command.getArgument(0), command.getArgument(1));
+                break;
             case NOTHANDLED:
                 session.sendResponse(ResponseType.COMMAND_NOT_IMPLEMENTED);
         }
     }
 
+    private void changeFilePermissions(String file, String numbers) {
+        if(numbersArgsAreValid(numbers)){
+            try {
+                filesystem.chmod(file, numbers);
+                session.sendResponse(ResponseType.REQUEST_SUCCESSFUL, "CHMOD");
+            } catch (FileException e) {
+                session.sendResponse(e.getResponse());
+            }
+        }else {
+            session.sendResponse(ResponseType.SYNTAX_ERROR);
+        }
+
+    }
+
+    private boolean numbersArgsAreValid(String numbers) {
+        return numbers.matches("[0-3]{2}");
+    }
+
+    private void abort() {
+        session.abortPassiveConnection();
+    }
+
+    private void sendFile(String path){
+        wasAborted = false;
+        if(session.passiveConnectionExist()){
+            try {
+                final InputStream stream = filesystem.getInputStream(path);
+                session.getPassiveConnection().sendData(stream);
+                session.sendResponse(ResponseType.PASSIVE_CONNECTION, "binary", path);
+            } catch (FileException e) {
+                if(!wasAborted)
+                    session.sendResponse(e.getResponse());
+            }
+        }else
+            session.sendResponse(ResponseType.CANT_OPEN_DATA_CONNECTION);
+    }
+
     private void addFileToServer(String path, boolean append) {
+        wasAborted = false;
         if(session.passiveConnectionExist()) {
             try {
-                final OutputStream stream = filesystem.getStream(path, append);
+                final OutputStream stream = filesystem.getOutputStream(path, append);
                 session.getPassiveConnection().getData(stream);
                 session.sendResponse(ResponseType.PASSIVE_CONNECTION, "binary", path);
             } catch (FileException e) {
-                session.sendResponse(e.getResponse());
+                if(!wasAborted)
+                    session.sendResponse(e.getResponse());
+            } catch (IOException e){
+                throw new RuntimeException(e);
             }
         }else
             session.sendResponse(ResponseType.CANT_OPEN_DATA_CONNECTION);

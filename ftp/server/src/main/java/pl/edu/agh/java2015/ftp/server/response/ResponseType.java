@@ -18,6 +18,7 @@ public enum ResponseType {
     PASSIVE_CONNECTION(         150, "Opening %s mode data connection for '%s'",2),
     COMMAND_NOT_IMPLEMENTED(    502, "Command not implemented", 0),
     CANT_OPEN_DATA_CONNECTION(  425, "Can't open data connection", 0),
+    ABORTED(                    426, "Transfer was aborted", 0),
     INVALID_USER_OR_PASSWORD(   430, "Invalid username or password", 0),
     ACTION_ABORTED_LOCAL(       451, "Requested action aborted. Local error in processing", 0),
     SYNTAX_ERROR(               501, "Syntax error in parameters or arguments",0),
@@ -48,9 +49,4 @@ public enum ResponseType {
     public String getMessage() {
         return message;
     }
-
-    public int getNumberOfParams() {
-        return numberOfParams;
-    }
-
 }
