@@ -2,6 +2,7 @@ package pl.edu.agh.java2015.ftp.server.gui.tables;
 
 import javafx.scene.control.Tab;
 import pl.edu.agh.java2015.ftp.server.Group;
+import pl.edu.agh.java2015.ftp.server.User;
 import pl.edu.agh.java2015.ftp.server.UserGroup;
 import pl.edu.agh.java2015.ftp.server.database.DBGroupManager;
 import pl.edu.agh.java2015.ftp.server.database.DBUserManager;
@@ -122,6 +123,16 @@ public class UserGroupTable {
             try {
                 Integer userID = Integer.parseInt(((JTextField) userIDTF.getComponent()).getText());
                 Integer groupID = Integer.parseInt(((JTextField) groupIDTF.getComponent()).getText());
+                User user = userManager.findUserById(userID);
+                Group group = groupManager.findGroupById(groupID);
+                if(user == null){
+                    JOptionPane.showMessageDialog(null,"User not exist","Error",JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if(group==null){
+                    JOptionPane.showMessageDialog(null,"Group not exist","Error",JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 groupManager.addUserToGroup(userID,groupID);
                 parent.reloadPanels();
             }catch (NumberFormatException ignore){
