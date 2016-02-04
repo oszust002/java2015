@@ -10,19 +10,30 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
- * Created by Kamil on 14.01.2016.
+ * Class that parses all commands from the client and sends responses directly to client
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public class CommandHandler {
     private Socket socket;
     private final Scanner scanner;
     private final PrintStream output;
 
+    /**
+     * Creates handler for specified socket connection
+     * @param socket Specified socket connection with user
+     * @throws IOException
+     */
     public CommandHandler(Socket socket) throws IOException {
         this.socket = socket;
         this.scanner = new Scanner(socket.getInputStream());
         this.output = new PrintStream(socket.getOutputStream());
     }
 
+    /**
+     * Parses text got from client, and parses it to the {@link Command}
+     * @return Command with specified {@link CommandType} and arguments
+     */
     public Command parseCommand(){
         String userCommand;
         try {
@@ -45,11 +56,18 @@ public class CommandHandler {
         return command;
     }
 
+    /**
+     * Sends specified {@link Response} to the client
+     * @param response {@link Response} which will be sent
+     */
     public void sendResponse(Response response){
         output.print(response.toSendString());
         System.out.println("Server response: "+response);
     }
 
+    /**
+     * Closes socket connection with the client
+     */
     public void closeSocket(){
         try {
             socket.close();
@@ -58,6 +76,10 @@ public class CommandHandler {
         }
     }
 
+    /**
+     * Checks if socket connection is running
+     * @return True if connection exists, false otherwise
+     */
     public boolean isSocketRunning(){
         return !socket.isClosed();
     }

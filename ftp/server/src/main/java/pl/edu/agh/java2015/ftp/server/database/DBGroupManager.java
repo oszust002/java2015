@@ -10,7 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by Kamil on 13.01.2016.
+ * Class to manage groups and user_group databases
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public class DBGroupManager {
     private static final String IS_USER_IN_GROUP_QUERY =
@@ -34,11 +36,18 @@ public class DBGroupManager {
 
     private final DBConnectionsManager connectionsManager;
 
+    /**
+     * Creates {@link DBGroupManager} with specified {@link DBConnectionsManager}
+     * @param connectionsManager database connection manager
+     */
     public DBGroupManager(DBConnectionsManager connectionsManager) {
         this.connectionsManager = connectionsManager;
     }
 
-
+    /**
+     * Gets all {@link UserGroup} pairs from the user_group database
+     * @return List of {@link UserGroup} pairs
+     */
     public List<UserGroup> getUserGroup() {
         Connection connection = null;
         List<UserGroup> userGroups = new LinkedList<>();
@@ -55,6 +64,10 @@ public class DBGroupManager {
         return userGroups;
     }
 
+    /**
+     * Gets all {@link Group} from the groups database
+     * @return List of all {@link Group} in database
+     */
     public List<Group> getGroups() {
         Connection connection = null;
         List<Group> groups = new LinkedList<>();
@@ -72,6 +85,12 @@ public class DBGroupManager {
         return groups;
     }
 
+    /**
+     * Checks if user is in group
+     * @param userID ID of a specified {@link User}
+     * @param groupID ID of a specified {@link Group}
+     * @return true if user is in group, false otherwise
+     */
     public boolean isUserInGroup(Integer userID, Integer groupID) {
         Connection connection = null;
         try {
@@ -88,6 +107,11 @@ public class DBGroupManager {
         }
     }
 
+    /**
+     * Gets group with a specific ID;
+     * @param id ID of a group
+     * @return null if not exists, {@link Group} with specified ID otherwise
+     */
     public Group findGroupById(int id) {
         Connection connection = null;
         try {
@@ -106,7 +130,11 @@ public class DBGroupManager {
         }
     }
 
-
+    /**
+     * Gets users groupID
+     * @param user user which belongs to the group
+     * @return ID of a {@link Group} where user exists
+     */
     public int getUserGroupId(User user) {
         Connection connection = null;
         try {
@@ -126,6 +154,11 @@ public class DBGroupManager {
         }
     }
 
+    /**
+     * Creates group in database
+     * @param groupname name of group which will be added
+     * @return index of added group
+     */
     public int createGroup(String groupname) {
         if (groupExist(groupname))
             return -1;
@@ -149,6 +182,11 @@ public class DBGroupManager {
         }
     }
 
+    /**
+     * Checks if group exists in database
+     * @param groupname name of the group to check
+     * @return true if group exists, false otherwise
+     */
     private boolean groupExist(String groupname) {
         if (groupname == null)
             return false;
@@ -167,6 +205,11 @@ public class DBGroupManager {
         }
     }
 
+    /**
+     * Add user to specified group
+     * @param userIndex index of user
+     * @param groupIndex index of group
+     */
     public void addUserToGroup(int userIndex, int groupIndex) {
         Connection connection = null;
         //noinspection Duplicates
@@ -183,21 +226,34 @@ public class DBGroupManager {
         }
     }
 
+    /**
+     * Deletes all rows where user is from user_groups
+     * @param index user index
+     */
     public void deleteUserFromUserGroups(Integer index) {
         delete(index, DELETE_FROM_USER_GROUP_WHERE_USER_ID);
     }
 
+    /**
+     * Delete all rows where group is from user_groups
+     * @param index group index
+     */
     public void deleteGroupFromUserGroup(Integer index) {
         delete(index, DELETE_FROM_USER_GROUP_WHERE_GROUP_ID);
     }
 
-    private void delete(Integer groupIndex, String statement) {
+    /**
+     * Deletes rows from user_groups
+     * @param Index index of user or group
+     * @param statement specified statement
+     */
+    private void delete(Integer index, String statement) {
         Connection connection = null;
         //noinspection Duplicates
         try {
             connection = connectionsManager.createConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(statement);
-            preparedStatement.setInt(1, groupIndex);
+            preparedStatement.setInt(1, index);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DatabaseException(e);
@@ -206,12 +262,22 @@ public class DBGroupManager {
         }
     }
 
+    /**
+     * Deletes group from groups with specified group index
+     * @param groupIndex index of a group to delete
+     */
     public void deleteGroup(Integer groupIndex) {
         delete(groupIndex, DELETE_FROM_GROUPS_WHERE_ID);
     }
 
+    /**
+     * Delete {@link UserGroup} with specified user ID and group ID
+     * @param uID ID of {@link User}
+     * @param gID ID of {@link Group}
+     */
     public void deleteUserGroup(Integer uID, Integer gID) {
         Connection connection = null;
+        //noinspection Duplicates
         try {
             connection = connectionsManager.createConnection();
             PreparedStatement preparedStatement =

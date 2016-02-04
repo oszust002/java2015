@@ -1,7 +1,9 @@
 package pl.edu.agh.java2015.ftp.server.command;
 
 /**
- * Created by Kamil on 14.01.2016.
+ * Enum class, which contains all handled commands with number of arguments that they take
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public enum CommandType{
     USER(1), PASS(1), QUIT(0), NOOP(0), PASV(0), STOR(1), RETR(1), APPE(1), ABOR(0), DELE(1), RMD(1),
@@ -9,6 +11,11 @@ public enum CommandType{
 
 
     private final int numberOfArgs;
+
+    /**
+     * Creates {@link CommandType} with specified number of args
+     * @param numberOfArgs number of arguments that command takes
+     */
     CommandType(int numberOfArgs){
         this.numberOfArgs = numberOfArgs;
     }

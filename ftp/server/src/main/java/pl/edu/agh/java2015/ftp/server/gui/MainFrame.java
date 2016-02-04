@@ -12,17 +12,15 @@ import java.awt.*;
  * Created by Kamil on 03.02.2016.
  */
 public class MainFrame extends JFrame{
-    private DatabaseOptions optionsPanel;
-    private TabbedPane pane;
 
     public MainFrame(SessionsManager manager, DBUserManager userManager, DBGroupManager groupManager,
                      DBConnectionsManager connectionsManager){
         this.setSize(700,600);
         this.setMinimumSize(new Dimension(750,600));
         this.setLayout(new BorderLayout(5,5));
-        optionsPanel = new DatabaseOptions(this, manager, connectionsManager);
+        DatabaseOptions optionsPanel = new DatabaseOptions(this, manager, connectionsManager);
         this.add(optionsPanel.getPanel(),BorderLayout.NORTH);
-        pane = new TabbedPane(userManager,groupManager,this);
+        TabbedPane pane = new TabbedPane(userManager, groupManager, this);
         this.add(pane);
     }
 }

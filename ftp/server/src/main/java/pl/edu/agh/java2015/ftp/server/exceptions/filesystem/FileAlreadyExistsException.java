@@ -4,10 +4,11 @@ import pl.edu.agh.java2015.ftp.server.exceptions.filesystem.FileException;
 import pl.edu.agh.java2015.ftp.server.response.ResponseType;
 
 /**
- * Created by Kamil on 26.01.2016.
+ * Extended {@link FileException} when File already exists in FTP
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public class FileAlreadyExistsException extends FileException {
-
 
     public FileAlreadyExistsException(String path) {
         super(ResponseType.FILE_ALREADY_EXIST, path);

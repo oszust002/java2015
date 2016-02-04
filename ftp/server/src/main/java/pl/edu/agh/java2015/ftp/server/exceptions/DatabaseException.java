@@ -3,7 +3,7 @@ package pl.edu.agh.java2015.ftp.server.exceptions;
 import java.sql.SQLException;
 
 /**
- * Created by Kamil on 13.01.2016.
+ * Exception thrown when problem with database shows up
  */
 public class DatabaseException extends RuntimeException {
     public DatabaseException(String message) {

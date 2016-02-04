@@ -6,7 +6,9 @@ import pl.edu.agh.java2015.ftp.server.response.ResponseType;
 import java.io.IOException;
 
 /**
- * Created by Kamil on 25.01.2016.
+ * Exception class when something with files or database file record has happened
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public class FileException extends Exception{
     private final Response response;
@@ -20,6 +22,10 @@ public class FileException extends Exception{
         response = new Response(ResponseType.ACTION_ABORTED_LOCAL);
     }
 
+    /**
+     * Gets response of the specified exception
+     * @return {@link Response} for the specified exception
+     */
     public Response getResponse(){
         return response;
     }

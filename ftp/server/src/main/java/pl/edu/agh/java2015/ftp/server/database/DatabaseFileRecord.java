@@ -4,7 +4,9 @@ import pl.edu.agh.java2015.ftp.server.Group;
 import pl.edu.agh.java2015.ftp.server.User;
 
 /**
- * Created by Kamil on 25.01.2016.
+ * Class that holds info about file, which were took from database
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public class DatabaseFileRecord {
     private final Integer fileId;
@@ -16,6 +18,18 @@ public class DatabaseFileRecord {
     private final boolean groupRead;
     private final boolean groupWrite;
 
+    /**
+     * Creates file with all file parameters from the files database
+     * @param fileId ID of a file
+     * @param filename name/path to a file
+     * @param owner Owner of a file
+     * @param group Group which can work on file when have permissions
+     * @param ownerRead true if owner can read, false otherwise
+     * @param ownerWrite true if owner can write, false otherwise
+     * @param groupRead true if group can read, false otherwise
+     * @param groupWrite true if group can write, false otherwise
+     * @see DBFilesManager
+     */
     public DatabaseFileRecord(Integer fileId, String filename, User owner, Group group, boolean ownerRead,
                               boolean ownerWrite, boolean groupRead, boolean groupWrite) {
         this.fileId = fileId;
@@ -28,34 +42,47 @@ public class DatabaseFileRecord {
         this.groupWrite = groupWrite;
     }
 
+    /**
+     * Checks if group members can write
+     * @return true if group can write, false otherwise
+     */
     public boolean isGroupWrite() {
         return groupWrite;
     }
 
-    public Integer getFileId() {
-        return fileId;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
+    /**
+     * Returns the owner of the file
+     * @return {@link User} object, owner of the file
+     */
     public User getOwner() {
         return owner;
     }
 
+    /**
+     * Returns the group which can work on file
+     * @return {@link Group} object, which can work on file
+     */
     public Group getGroup() {
         return group;
     }
-
+    /**
+     * Checks if owner can read
+     * @return true if owner can read, false otherwise
+     */
     public boolean isOwnerRead() {
         return ownerRead;
     }
-
+    /**
+     * Checks if owner can write
+     * @return true if owner can write, false otherwise
+     */
     public boolean isOwnerWrite() {
         return ownerWrite;
     }
-
+    /**
+     * Checks if group members can read
+     * @return true if group can read, false otherwise
+     */
     public boolean isGroupRead() {
         return groupRead;
     }

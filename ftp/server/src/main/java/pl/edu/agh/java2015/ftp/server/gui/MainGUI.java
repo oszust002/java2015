@@ -18,6 +18,7 @@ public class MainGUI {
             public void run() {
 
                 DBConnectionsManager connectionsManager = DBConnectionsManager.createInstance();
+                connectionsManager.createTables();
                 DBUserManager userManager = new DBUserManager(connectionsManager);
                 DBGroupManager groupManager = new DBGroupManager(connectionsManager);
                 SessionsManager sessionsManager = new SessionsManager(

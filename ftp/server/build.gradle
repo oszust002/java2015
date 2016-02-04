@@ -3,7 +3,7 @@ apply plugin: 'application'
 apply plugin: 'idea'
 
 
-mainClassName = "pl.edu.agh.java2015.ftp.server.Main"
+mainClassName = "pl.edu.agh.java2015.ftp.server.gui.MainGUI"
 repositories{
 	mavenCentral()
 }

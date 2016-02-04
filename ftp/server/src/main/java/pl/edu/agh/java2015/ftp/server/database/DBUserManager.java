@@ -11,7 +11,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by Kamil on 11.01.2016.
+ * Class to manage user database
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public class DBUserManager {
     private final DBConnectionsManager connections;
@@ -22,10 +24,20 @@ public class DBUserManager {
     private static final String GET_ALL_USERS = "SELECT * FROM users";
     private static final String DELETE_USER_WHERE_ID = "DELETE FROM users WHERE id=?";
 
+    /**
+     * Creates {@link DBUserManager} with specified {@link DBConnectionsManager}
+     * @param connections specified connection manager
+     */
     public DBUserManager(DBConnectionsManager connections) {
         this.connections = connections;
     }
 
+    /**
+     * Authethicates user
+     * @param user user to authenticate
+     * @param password password to check
+     * @return true if password is correct, false otherwise
+     */
     public boolean authenticateUser(User user, String password){
         if(user == null || user.getPassword() != null)
             throw new IllegalArgumentException("User not exist or is already authenticated");
@@ -57,6 +69,10 @@ public class DBUserManager {
         }
     }
 
+    /**
+     * Gets all {@link User} from users
+     * @return List of {@link User}
+     */
     public List<User> getUsers(){
         List<User> users = new LinkedList<>();
         Connection connection = null;
@@ -74,6 +90,12 @@ public class DBUserManager {
         }
         return users;
     }
+
+    /**
+     * Gets user by specified id
+     * @param id ID of a user
+     * @return {@link User} object from specified ID
+     */
     public User findUserById(Integer id){
         Connection connection = null;
         try {
@@ -94,6 +116,11 @@ public class DBUserManager {
         }
     }
 
+    /**
+     * Finds user by username
+     * @param username speicifed username
+     * @return {@link User} object from specified username
+     */
     public User findUserByUsername(String username){
         Connection connection = null;
         try {
@@ -113,6 +140,12 @@ public class DBUserManager {
         }
     }
 
+    /**
+     * Generates hash from passsword and salt
+     * @param password password to hash
+     * @param salt "random things" for hashing
+     * @return hashed password
+     */
     private String generateHash(String password, String salt){
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
@@ -127,6 +160,13 @@ public class DBUserManager {
         }
     }
 
+    /**
+     * Creates user from given info
+     * @param username username of new {@link User}
+     * @param password password of user
+     * @param salt salt, "random things" for hashing
+     * @return index of {@link User}
+     */
     public int createUser(String username, String password, String salt){
         if(userExist(username))
             return -1;
@@ -153,7 +193,11 @@ public class DBUserManager {
         }
     }
 
-
+    /**
+     * Checks if user exists in database
+     * @param username username to check
+     * @return true if user exists, false otherwise
+     */
     public boolean userExist(String username){
         if(username == null)
             return false;
@@ -172,6 +216,10 @@ public class DBUserManager {
         }
     }
 
+    /**
+     * Deletes user of specified index
+     * @param index index of user to delete
+     */
     public void deleteUser(Integer index) {
         Connection connection = null;
         //noinspection Duplicates

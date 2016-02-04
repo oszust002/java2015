@@ -1,7 +1,9 @@
 package pl.edu.agh.java2015.ftp.server.response;
 
 /**
- * Created by Kamil on 14.01.2016.
+ * Enum class that holds all response type which are implemented
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public enum ResponseType {
     PASSWORD_REQUIRED(          331, "Password required", 0),
@@ -13,7 +15,6 @@ public enum ResponseType {
     TRANSFER_COMPLETE(          150, "Transfer complete", 0),
     REQUEST_SUCCESSFUL(         250, "%s was succesful",1),
     CURRENT_DIRECTORY(          257, "\"%s\" is current directory", 1),
-    CREATED_DIRECTORY(          257, "%s was created", 1),
     HELLO(                      220, "Hello", 0),
     PASSIVE_CONNECTION(         150, "Opening %s mode data connection for '%s'",2),
     COMMAND_NOT_IMPLEMENTED(    502, "Command not implemented", 0),

@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 /**
- * Created by Kamil on 14.01.2016.
+ * @author Kamil Osuch
+ * @version 1.0
  */
 public class Session implements Runnable{
     private final CommandHandler commandHandler;

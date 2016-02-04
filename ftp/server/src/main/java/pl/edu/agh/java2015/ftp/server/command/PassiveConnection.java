@@ -11,14 +11,21 @@ import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 
 /**
-* Created by Kamil on 15.01.2016.
-*/
+ * Class that takes responsibility for transferring all the data between client and server
+ * @author Kamil Osuch
+ * @version 1.0
+ */
 public class PassiveConnection {
     private ServerSocket serverSocket;
     private final Session session;
     private Socket socket = null;
     ExecutorService executorService;
 
+    /**
+     * Creates passive connection for the specified client session
+     * @param session {@link Session} specified for client
+     * @param executorService Executor service that takes tasks to execute on non-used threads
+     */
     public PassiveConnection(Session session, ExecutorService executorService){
         this.session = session;
         this.executorService = executorService;
@@ -31,6 +38,9 @@ public class PassiveConnection {
         accept();
     }
 
+    /**
+     * Accepts passive connection from the client
+     */
     private void accept(){
         executorService.execute(new Runnable() {
             @Override
@@ -50,6 +60,10 @@ public class PassiveConnection {
         });
     }
 
+    /**
+     * Get the data which was sent by the user and buffers it to specified OutputStream in passive connection
+     * @param outputStream OutputStream of a file where file will be sent
+     */
     public void getData(OutputStream outputStream){
         executorService.execute(new Runnable() {
             @Override
@@ -77,6 +91,10 @@ public class PassiveConnection {
         });
     }
 
+    /**
+     * Sends data from specified InputStream to the client output stream in passive connection
+     * @param inputStream InputStream of a file which will be sent
+     */
     public void sendData(InputStream inputStream){
         executorService.execute(new Runnable() {
             @Override
@@ -103,6 +121,10 @@ public class PassiveConnection {
         });
     }
 
+    /**
+     * Sends list of files given in the argument
+     * @param list list of files given from the {@link pl.edu.agh.java2015.ftp.server.Filesystem}
+     */
     public void sendFileList(String list){
         executorService.execute(new Runnable() {
             @Override
@@ -123,6 +145,9 @@ public class PassiveConnection {
         });
     }
 
+    /**
+     * Waits for connection with client on passive connection
+     */
     private void waitingForConnection(){
         try {
             synchronized (this){
@@ -135,10 +160,18 @@ public class PassiveConnection {
         }
     }
 
+    /**
+     * Returns port on which serverSocket is created
+     * @return port of ServerSocket
+     */
     public int getPort() {
             return serverSocket.getLocalPort();
         }
 
+    /**
+     * Disconnects passive connection
+     * @throws RuntimeException when problem with closing Socket or ServerSocket
+     */
     public void disconnect() {
         try {
             if(socket!=null)
@@ -149,6 +182,10 @@ public class PassiveConnection {
         }
     }
 
+    /**
+     * Aborts passive connection with the client
+     * @return true if Socket was close, false otherwise
+     */
     public boolean abort() {
         if(socket != null) {
             try {
