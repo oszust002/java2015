@@ -20,6 +20,7 @@ public class DBUserManager {
     private static final String SELECT_USER_BY_ID = "SELECT * FROM users WHERE id = ?";
     private static final String CREATE_USER_QUERY = "INSERT INTO users (username, password, salt) VALUES (?,?,?)";
     private static final String GET_ALL_USERS = "SELECT * FROM users";
+    private static final String DELETE_USER_WHERE_ID = "DELETE FROM users WHERE id=?";
 
     public DBUserManager(DBConnectionsManager connections) {
         this.connections = connections;
@@ -152,10 +153,12 @@ public class DBUserManager {
         }
     }
 
+
     public boolean userExist(String username){
         if(username == null)
             return false;
         Connection connection = null;
+        //noinspection Duplicates
         try {
             connection = connections.createConnection();
             PreparedStatement statement = connection.prepareStatement(SELECT_USER_QUERY);
@@ -165,6 +168,21 @@ public class DBUserManager {
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }finally {
+            connections.releaseConncection(connection);
+        }
+    }
+
+    public void deleteUser(Integer index) {
+        Connection connection = null;
+        //noinspection Duplicates
+        try {
+            connection = connections.createConnection();
+            PreparedStatement statement = connection.prepareStatement(DELETE_USER_WHERE_ID);
+            statement.setInt(1,index);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        } finally {
             connections.releaseConncection(connection);
         }
     }

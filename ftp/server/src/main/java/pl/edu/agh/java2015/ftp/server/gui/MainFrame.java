@@ -18,7 +18,7 @@ public class MainFrame extends JFrame{
     public MainFrame(SessionsManager manager, DBUserManager userManager, DBGroupManager groupManager,
                      DBConnectionsManager connectionsManager){
         this.setSize(700,600);
-        this.setMinimumSize(new Dimension(750,300));
+        this.setMinimumSize(new Dimension(750,600));
         this.setLayout(new BorderLayout(5,5));
         optionsPanel = new DatabaseOptions(this, manager, connectionsManager);
         this.add(optionsPanel.getPanel(),BorderLayout.NORTH);

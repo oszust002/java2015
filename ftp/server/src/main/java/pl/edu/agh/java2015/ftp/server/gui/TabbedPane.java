@@ -21,13 +21,19 @@ public class TabbedPane extends JPanel{
     public TabbedPane(DBUserManager userManager, DBGroupManager groupManager, JFrame parent){
         super(new GridLayout(1,1));
         this.parent = parent;
-        usersTable = new UsersTable(userManager);
-        groupsTable = new GroupsTable(groupManager);
-        userGroupTable = new UserGroupTable(userManager,groupManager);
+        usersTable = new UsersTable(userManager,groupManager,this);
+        groupsTable = new GroupsTable(groupManager, this);
+        userGroupTable = new UserGroupTable(userManager,groupManager, this);
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Users",usersTable.getPanel());
         tabbedPane.addTab("Groups",groupsTable.getPanel());
         tabbedPane.addTab("User-Group",userGroupTable.getPanel());
         add(tabbedPane);
+    }
+
+    public void reloadPanels(){
+        usersTable.reload();
+        groupsTable.reload();
+        userGroupTable.reload();
     }
 }

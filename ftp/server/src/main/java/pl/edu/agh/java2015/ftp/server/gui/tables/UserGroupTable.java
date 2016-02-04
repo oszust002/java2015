@@ -1,14 +1,18 @@
 package pl.edu.agh.java2015.ftp.server.gui.tables;
 
+import javafx.scene.control.Tab;
 import pl.edu.agh.java2015.ftp.server.Group;
 import pl.edu.agh.java2015.ftp.server.UserGroup;
 import pl.edu.agh.java2015.ftp.server.database.DBGroupManager;
 import pl.edu.agh.java2015.ftp.server.database.DBUserManager;
 import pl.edu.agh.java2015.ftp.server.gui.NamedComponentPanel;
+import pl.edu.agh.java2015.ftp.server.gui.TabbedPane;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,8 +20,9 @@ import java.util.List;
  * Created by Kamil on 03.02.2016.
  */
 public class UserGroupTable {
-    DBUserManager userManager;
-    DBGroupManager groupManager;
+    private DBUserManager userManager;
+    private DBGroupManager groupManager;
+    private TabbedPane parent;
 
     private JPanel panel;
     private UserGroupTableModel tableModel;
@@ -28,9 +33,10 @@ public class UserGroupTable {
     private NamedComponentPanel userIDTF;
     private NamedComponentPanel groupIDTF;
 
-    public UserGroupTable(DBUserManager userManager, DBGroupManager groupManager){
+    public UserGroupTable(DBUserManager userManager, DBGroupManager groupManager,TabbedPane parent){
         this.userManager = userManager;
         this.groupManager = groupManager;
+        this.parent = parent;
 
         innerPanel = new JPanel(new GridLayout(1,4));
         delete = new JButton("Delete");
@@ -41,6 +47,8 @@ public class UserGroupTable {
         innerPanel.add(groupIDTF.getjPanel());
         innerPanel.add(addUserGroup);
         innerPanel.add(delete);
+        addUserGroup.addActionListener(new AddUserGroupListener());
+        delete.addActionListener(new DeleteUserGroupListener());
         tableModel = new UserGroupTableModel(groupManager.getUserGroup());
         table = new JTable(tableModel);
         panel = new JPanel(new FlowLayout());
@@ -53,6 +61,10 @@ public class UserGroupTable {
         return panel;
     }
 
+    public void reload() {
+        tableModel.reload();
+    }
+
     private class UserGroupTableModel extends AbstractTableModel {
         private List<String> columnNames;
         private List<Object[]> rowUserData;
@@ -63,12 +75,7 @@ public class UserGroupTable {
             columnNames.add("User ID");
             columnNames.add("Group ID");
             rowUserData = new LinkedList<>();
-            for(UserGroup userGroup: userGroups){
-                rowUserData.add(new Object[]{
-                        userGroup.getUserID(),
-                        userGroup.getGroupID()
-                });
-            }
+            addToModel(userGroups);
         }
 
         @Override
@@ -89,6 +96,54 @@ public class UserGroupTable {
         @Override
         public String getColumnName(int column) {
             return columnNames.get(column);
+        }
+
+
+        public void reload() {
+            rowUserData.clear();
+            List<UserGroup> userGroups = groupManager.getUserGroup();
+            addToModel(userGroups);
+            fireTableDataChanged();
+        }
+
+        private void addToModel(List<UserGroup> userGroups){
+            for(UserGroup userGroup: userGroups){
+                rowUserData.add(new Object[]{
+                        userGroup.getUserID(),
+                        userGroup.getGroupID()
+                });
+            }
+        }
+    }
+
+    private class AddUserGroupListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                Integer userID = Integer.parseInt(((JTextField) userIDTF.getComponent()).getText());
+                Integer groupID = Integer.parseInt(((JTextField) groupIDTF.getComponent()).getText());
+                groupManager.addUserToGroup(userID,groupID);
+                parent.reloadPanels();
+            }catch (NumberFormatException ignore){
+
+            }
+        }
+    }
+
+    private class DeleteUserGroupListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                for (int i: table.getSelectedRows()) {
+                    Integer uID = (Integer) tableModel.getValueAt(i, 0);
+                    Integer gID = (Integer) tableModel.getValueAt(i, 1);
+                    groupManager.deleteUserGroup(uID, gID);
+                }
+                parent.reloadPanels();
+            }catch (NumberFormatException ignore){
+
+            }
         }
     }
 }

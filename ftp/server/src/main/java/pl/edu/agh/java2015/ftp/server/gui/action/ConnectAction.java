@@ -19,7 +19,6 @@ public class ConnectAction extends AbstractAction{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println(getValue(NAME));
         if(getValue(NAME).equals("Start")){
             new SwingWorker<Void, Void>() {
                 @Override
@@ -34,7 +33,6 @@ public class ConnectAction extends AbstractAction{
         else {
             manager.disconnect();
             putValue(NAME,"Start");
-            System.out.println("Stopped");
         }
     }
 }
