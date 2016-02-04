@@ -1,5 +1,7 @@
 package pl.edu.agh.java2015.ftp.server.database;
 
+import jdk.nashorn.internal.runtime.regexp.joni.Config;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -9,10 +11,6 @@ import java.util.LinkedList;
  * Created by Kamil on 11.01.2016.
  */
 public class DBConnectionsManager {
-    private String username;
-    private String password;
-    private String host;
-    private String databaseName;
 
     //private Connection dbConnection = null;
     private LinkedList<Connection> freeConnections = new LinkedList<Connection>();
@@ -59,16 +57,9 @@ public class DBConnectionsManager {
                     ") ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 
-
-    private DBConnectionsManager(String username, String password, String host, String databaseName) {
-        this.username = username;
-        this.password = password;
-        this.host = host;
-        this.databaseName = databaseName;
-    }
-
     public Connection connect() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://"+host+"/"+databaseName,username,password);
+        ServerConfig config = ServerConfig.getInstance();
+        return DriverManager.getConnection(config.getUrl(),config.getLogin(),config.getPassword());
     }
 
     public Connection createConnection() throws SQLException {
@@ -98,7 +89,18 @@ public class DBConnectionsManager {
 
     public static DBConnectionsManager createInstance(){
         if(instance == null)
-            instance = new DBConnectionsManager("oszust","KZiuB2mV", "mysql.agh.edu.pl","oszust");
+            instance = new DBConnectionsManager();
         return instance;
+    }
+
+    public boolean testConnection(String url, String login, String password) {
+        try {
+            Connection connection = DriverManager.getConnection(url,login,password);
+            connection.close();
+            return true;
+        } catch (SQLException ignore) {
+
+        }
+        return false;
     }
 }

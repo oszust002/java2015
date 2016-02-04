@@ -13,6 +13,7 @@ import pl.edu.agh.java2015.ftp.server.response.ResponseType;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -29,14 +30,14 @@ public class Session implements Runnable{
     private final ExecutorService executorService;
 
     public Session(Socket socket, DBUserManager userManager, Filesystem filesystem,
-                   ExecutorService executorService) throws IOException {
+                   ExecutorService executorService, List<Session> connections) throws IOException {
         this.commandHandler = new CommandHandler(socket);
         commandExecutor = new CommandExecutor(this, filesystem);
         timeout = new Timeout(this, 60);
         commandHandler.sendResponse(new Response(ResponseType.HELLO));
         this.userManager = userManager;
         this.executorService = executorService;
-
+        connections.add(this);
     }
 
     @Override

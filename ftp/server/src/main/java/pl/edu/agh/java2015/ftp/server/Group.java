@@ -17,6 +17,10 @@ public class Group {
         this.groupname = groupname;
     }
 
+    public String getGroupname() {
+        return groupname;
+    }
+
     public Integer getId() {
         return id;
     }

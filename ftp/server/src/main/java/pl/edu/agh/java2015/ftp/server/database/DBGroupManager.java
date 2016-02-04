@@ -2,12 +2,17 @@ package pl.edu.agh.java2015.ftp.server.database;
 
 import pl.edu.agh.java2015.ftp.server.Group;
 import pl.edu.agh.java2015.ftp.server.User;
+import pl.edu.agh.java2015.ftp.server.UserGroup;
 import pl.edu.agh.java2015.ftp.server.exceptions.DatabaseException;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Kamil on 13.01.2016.
@@ -20,10 +25,46 @@ public class DBGroupManager {
     private static final String SELECT_GROUP_FROM_USER_GROUP_WHERE_USER_ID =
             "SELECT group_id FROM user_group WHERE user_id = ?";
 
+    private static final String GET_ALL_FROM_GROUPS = "SELECT * from groups";
+    private static final String GET_ALL_FROM_USERGROUP = "SELECT * from user_group";
+
     private final DBConnectionsManager connectionsManager;
 
     public DBGroupManager(DBConnectionsManager connectionsManager){
         this.connectionsManager = connectionsManager;
+    }
+
+    public List<UserGroup> getUserGroup(){
+        Connection connection = null;
+        List<UserGroup> userGroups = new LinkedList<>();
+        try {
+            connection = connectionsManager.createConnection();
+            PreparedStatement statement = connection.prepareStatement(GET_ALL_FROM_USERGROUP);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next())
+                userGroups.add(new UserGroup(resultSet.getInt("user_id"), resultSet.getInt("group_id")));
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }
+        return userGroups;
+    }
+
+    public List<Group> getGroups(){
+        Connection connection = null;
+        List<Group> groups = new LinkedList<>();
+        try {
+            connection = connectionsManager.createConnection();
+            PreparedStatement statement = connection.prepareStatement(GET_ALL_FROM_GROUPS);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next())
+                groups.add(new Group(resultSet.getInt("id"), resultSet.getString("group_name")));
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        } finally {
+            connectionsManager.releaseConncection(connection);
+        }
+        return groups;
     }
 
     public boolean isUserInGroup(Integer userID, Integer groupID){

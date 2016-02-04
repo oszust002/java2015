@@ -7,6 +7,8 @@ import javax.xml.crypto.Data;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Kamil on 11.01.2016.
@@ -17,6 +19,7 @@ public class DBUserManager {
     private static final String SELECT_USER_QUERY = "SELECT * FROM users WHERE username = ?";
     private static final String SELECT_USER_BY_ID = "SELECT * FROM users WHERE id = ?";
     private static final String CREATE_USER_QUERY = "INSERT INTO users (username, password, salt) VALUES (?,?,?)";
+    private static final String GET_ALL_USERS = "SELECT * FROM users";
 
     public DBUserManager(DBConnectionsManager connections) {
         this.connections = connections;
@@ -53,6 +56,23 @@ public class DBUserManager {
         }
     }
 
+    public List<User> getUsers(){
+        List<User> users = new LinkedList<>();
+        Connection connection = null;
+        try {
+            connection = connections.createConnection();
+            PreparedStatement statement = connection.prepareStatement(GET_ALL_USERS);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next())
+                users.add(new User(resultSet.getString("username"),
+                        resultSet.getString("password"),
+                        resultSet.getString("salt"),
+                        resultSet.getInt("id")));
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }
+        return users;
+    }
     public User findUserById(Integer id){
         Connection connection = null;
         try {
