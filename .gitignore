@@ -3,8 +3,8 @@
 
 ### Gradle ###
 !project/automaton/build/resources/main/images/ant.png
-project/automaton/.gradle
-project/automaton/build/
+.gradle
+build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -48,6 +48,7 @@ gradle-app.setting
 ## File-based project format:
 *.ipr
 *.iws
+*.ids
 
 ## Plugin-specific files:
 
@@ -83,3 +84,4 @@ hs_err_pid*
 
 lab-init.bin
 project/automaton/todo
+ftp/server/ftp
